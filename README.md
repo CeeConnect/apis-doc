@@ -6,11 +6,11 @@ Catalogue API pour la gestion des opérations standardisées d'économies d'éne
 
 ## Usage
 
-`
+```
 git clone https://github.com/CeeConnect/apis-doc.git path/to/directory
 npm install
 npm run dev
-`
+```
 
 ## Licence
 
