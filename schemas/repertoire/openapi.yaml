@@ -1,0 +1,584 @@
+openapi: 3.1.0
+info:
+  title: Répertoire
+  description: >-
+    API d'accès au répertoire national des opérations standardisées d'économies
+    d'énergie
+  version: 1.0.0
+tags:
+  - name: Fiche
+  - name: Bonification
+  - name: Bonus
+paths:
+  /fiches:
+    get:
+      summary: Recherche une liste des fiches d'opération standardisée par attributs
+      operationId: getFichesBy
+      tags:
+        - Fiche
+      parameters:
+        - name: code
+          in: query
+          schema: &ref_46
+            $id: https://schemas.ceeconnect.fr/formats/code_fiche
+            $schema: https://json-schema.org/draft/2020-12/schema
+            title: Code
+            type: string
+            pattern: >-
+              (AGRI|BAR|BAT|IND|RES|TRA)[-](BA|CH|EC|EN|EQ|SE|TH|UT)[-][0-9]*([-]SE)?
+            examples:
+              - AGRI-EQ-101
+              - BAT-EN-101
+              - BAR-EN-101
+              - IND-BA-110
+              - RES-CH-101
+              - TRA-EQ-101
+        - name: secteur
+          in: query
+          schema: &ref_44
+            $id: https://schemas.ceeconnect.fr/enums/secteur-application
+            $schema: https://json-schema.org/draft/2020-12/schema
+            title: Secteur d'application
+            type: string
+            oneOf:
+              - &ref_0
+                const: AGRI
+                title: Agriculture
+              - &ref_1
+                const: BAR
+                title: Bâtiment résidentiel
+              - &ref_2
+                const: BAT
+                title: Bâtiment tertiaire
+              - &ref_3
+                const: IND
+                title: Industrie
+              - &ref_4
+                const: RES
+                title: Réseaux
+              - &ref_5
+                const: TRA
+                title: Transport
+            $defs:
+              AGRI: *ref_0
+              BAR: *ref_1
+              BAT: *ref_2
+              IND: *ref_3
+              RES: *ref_4
+              TRA: *ref_5
+            examples:
+              - AGRI
+              - BAR
+              - BAT
+              - IND
+              - RES
+              - TRA
+        - name: sousSecteur
+          in: query
+          schema: &ref_45
+            $id: https://schemas.ceeconnect.fr/enums/sous-secteur-application
+            $schema: https://json-schema.org/draft/2020-12/schema
+            title: Sous-secteur d'application
+            type: string
+            oneOf:
+              - &ref_6
+                const: BA
+                title: Bâtiments
+              - &ref_7
+                const: CH
+                title: Chaleur et Froid
+              - &ref_8
+                const: EC
+                title: Eclairage
+              - &ref_9
+                const: EN
+                title: Enveloppe
+              - &ref_10
+                const: EQ
+                title: Equipement
+              - &ref_11
+                const: SE
+                title: Services
+              - &ref_12
+                const: TH
+                title: Thermique
+              - &ref_13
+                const: UT
+                title: Utilités
+            $defs:
+              BA: *ref_6
+              CH: *ref_7
+              EC: *ref_8
+              EN: *ref_9
+              EQ: *ref_10
+              SE: *ref_11
+              TH: *ref_12
+              UT: *ref_13
+            examples:
+              - BA
+              - CH
+              - EC
+              - EN
+              - EQ
+              - SE
+              - TH
+              - UT
+        - name: date
+          in: query
+          description: Date prévue de l'opération
+          schema:
+            type: string
+            format: date
+        - name: metropole
+          in: query
+          description: Fiche applicable en France métropolitaine
+          schema:
+            type: boolean
+        - name: outreMer
+          in: query
+          description: Fiche applicable en France d'outre-mer
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: Fiches d'opération standardisée retournées
+          content:
+            application/json:
+              schema:
+                type: array
+                items: &ref_28
+                  title: Fiche d'opération standardisée
+                  type: object
+                  properties:
+                    id:
+                      $id: https://schemas.ceeconnect.fr/formats/reference_fiche
+                      $schema: https://json-schema.org/draft/2020-12/schema
+                      title: Référence interne
+                      type: string
+                      pattern: >-
+                        (AGRI|BAR|BAT|IND|RES|TRA)-(BA|CH|EC|EN|EQ|SE|TH|UT)-[0-9]+(-SE)?v[0-9]+[-][0-9]+
+                      examples:
+                        - BAR-EN-101v39-4
+                        - BAR-EN-102v39-2
+                        - BAR-EN-103v39-5
+                    secteur:
+                      title: Secteur d'application
+                      type: object
+                      properties:
+                        code:
+                          $id: >-
+                            https://schemas.ceeconnect.fr/enums/secteur-application
+                          $schema: https://json-schema.org/draft/2020-12/schema
+                          title: Secteur d'application
+                          type: string
+                          oneOf:
+                            - &ref_14
+                              const: AGRI
+                              title: Agriculture
+                            - &ref_15
+                              const: BAR
+                              title: Bâtiment résidentiel
+                            - &ref_16
+                              const: BAT
+                              title: Bâtiment tertiaire
+                            - &ref_17
+                              const: IND
+                              title: Industrie
+                            - &ref_18
+                              const: RES
+                              title: Réseaux
+                            - &ref_19
+                              const: TRA
+                              title: Transport
+                          $defs:
+                            AGRI: *ref_14
+                            BAR: *ref_15
+                            BAT: *ref_16
+                            IND: *ref_17
+                            RES: *ref_18
+                            TRA: *ref_19
+                          examples:
+                            - AGRI
+                            - BAR
+                            - BAT
+                            - IND
+                            - RES
+                            - TRA
+                        nom:
+                          title: Nom
+                          type: string
+                      required:
+                        - code
+                        - nom
+                    sousSecteur:
+                      title: Sous secteur d'application
+                      type: object
+                      properties:
+                        code:
+                          $id: >-
+                            https://schemas.ceeconnect.fr/enums/sous-secteur-application
+                          $schema: https://json-schema.org/draft/2020-12/schema
+                          title: Sous-secteur d'application
+                          type: string
+                          oneOf:
+                            - &ref_20
+                              const: BA
+                              title: Bâtiments
+                            - &ref_21
+                              const: CH
+                              title: Chaleur et Froid
+                            - &ref_22
+                              const: EC
+                              title: Eclairage
+                            - &ref_23
+                              const: EN
+                              title: Enveloppe
+                            - &ref_24
+                              const: EQ
+                              title: Equipement
+                            - &ref_25
+                              const: SE
+                              title: Services
+                            - &ref_26
+                              const: TH
+                              title: Thermique
+                            - &ref_27
+                              const: UT
+                              title: Utilités
+                          $defs:
+                            BA: *ref_20
+                            CH: *ref_21
+                            EC: *ref_22
+                            EN: *ref_23
+                            EQ: *ref_24
+                            SE: *ref_25
+                            TH: *ref_26
+                            UT: *ref_27
+                          examples:
+                            - BA
+                            - CH
+                            - EC
+                            - EN
+                            - EQ
+                            - SE
+                            - TH
+                            - UT
+                        nom:
+                          title: Nom
+                          type: string
+                      required:
+                        - code
+                        - nom
+                    code:
+                      $id: https://schemas.ceeconnect.fr/formats/code_fiche
+                      $schema: https://json-schema.org/draft/2020-12/schema
+                      title: Code
+                      type: string
+                      pattern: >-
+                        (AGRI|BAR|BAT|IND|RES|TRA)[-](BA|CH|EC|EN|EQ|SE|TH|UT)[-][0-9]*([-]SE)?
+                      examples:
+                        - AGRI-EQ-101
+                        - BAT-EN-101
+                        - BAR-EN-101
+                        - IND-BA-110
+                        - RES-CH-101
+                        - TRA-EQ-101
+                    version:
+                      type: string
+                      pattern: ^[0-9]+[.][0-9]+$
+                      examples:
+                        - '14.1'
+                        - '33.4'
+                    nom:
+                      type: string
+                    dateDebut:
+                      type: string
+                      format: date
+                    dateFin:
+                      type:
+                        - string
+                        - 'null'
+                      format: date
+                    metropole:
+                      type: boolean
+                    outreMer:
+                      type: boolean
+                  required:
+                    - id
+                    - code
+                    - secteur
+                    - sousSecteur
+                    - nom
+                    - version
+                    - dateDebut
+                    - dateFin
+                    - metropole
+                    - outreMer
+  /fiches/{id}:
+    get:
+      summary: Recherche une fiche d'opération standardisée par son identifiant unique
+      operationId: getFicheById
+      tags:
+        - Fiche
+      parameters:
+        - name: id
+          in: path
+          schema: &ref_47
+            $id: https://schemas.ceeconnect.fr/formats/reference_fiche
+            $schema: https://json-schema.org/draft/2020-12/schema
+            title: Référence interne
+            type: string
+            pattern: >-
+              (AGRI|BAR|BAT|IND|RES|TRA)-(BA|CH|EC|EN|EQ|SE|TH|UT)-[0-9]+(-SE)?v[0-9]+[-][0-9]+
+            examples:
+              - BAR-EN-101v39-4
+              - BAR-EN-102v39-2
+              - BAR-EN-103v39-5
+      responses:
+        '200':
+          description: Fiche d'opération standardisée retournée
+          content:
+            application/json:
+              schema: *ref_28
+        '404':
+          description: Fiche d'opération standardisée non trouvée
+  /bonifications:
+    get:
+      summary: Recherche une liste des bonifications par attributs
+      operationId: getBonificationsBy
+      tags:
+        - Bonification
+      parameters:
+        - name: code
+          in: query
+          schema: &ref_42
+            $id: https://schemas.ceeconnect.fr/enums/code-bonification
+            $schema: https://json-schema.org/draft/2020-12/schema
+            title: Code
+            type: string
+            oneOf:
+              - &ref_29
+                const: ZNI
+                title: >-
+                  Zones non interconnectées au réseau métropolitain continental
+                  de transport d'électricité
+              - &ref_30
+                const: CPE
+                title: Contrat de performance énergétique
+              - &ref_31
+                const: CFT
+                title: >-
+                  Coup de pouce Chauffage des bâtiments résidentiels collectifs
+                  et tertiaires
+              - &ref_32
+                const: CRC
+                title: >-
+                  Coup de pouce Rénovation performante de bâtiment résidentiel
+                  collectif
+              - &ref_33
+                const: CRM
+                title: Coup de pouce Rénovation performante d'une maison individuelle
+              - &ref_34
+                const: CDP
+                title: Coup de pouce Chauffage
+            $defs:
+              ZNI: *ref_29
+              CPE: *ref_30
+              CFT: *ref_31
+              CRC: *ref_32
+              CRM: *ref_33
+              CDP: *ref_34
+              CDC:
+                const: CDC
+                title: Coup de pouce Covoiturage
+            examples:
+              - ZNI
+              - CPE
+              - CFT
+              - CRC
+              - CRM
+              - CDP
+        - name: date
+          in: query
+          description: Date prévue de l'opération
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Bonifications retournées
+          content:
+            application/json:
+              schema:
+                type: array
+                items: &ref_41
+                  title: Bonification
+                  description: >-
+                    Bonification applicable aux opérations standardisées
+                    d'économies d'énergie
+                  type: object
+                  properties:
+                    id:
+                      $id: >-
+                        https://schemas.ceeconnect.fr/formats/reference_bonification
+                      $schema: https://json-schema.org/draft/2020-12/schema
+                      title: Référence interne
+                      type: string
+                      pattern: >-
+                        (ZNI|GPE-ZNI|ETS|CPE|GPE|CFT|CRC|CRM|CTH|CDP|CDC)([-][0-9]+)?v[0-9]*([-][0-9]*)?
+                      examples:
+                        - CRMv31-1
+                        - CDP-1v20-1
+                        - ZNIv35-1
+                    code:
+                      $id: https://schemas.ceeconnect.fr/enums/code-bonification
+                      $schema: https://json-schema.org/draft/2020-12/schema
+                      title: Code
+                      type: string
+                      oneOf:
+                        - &ref_35
+                          const: ZNI
+                          title: >-
+                            Zones non interconnectées au réseau métropolitain
+                            continental de transport d'électricité
+                        - &ref_36
+                          const: CPE
+                          title: Contrat de performance énergétique
+                        - &ref_37
+                          const: CFT
+                          title: >-
+                            Coup de pouce Chauffage des bâtiments résidentiels
+                            collectifs et tertiaires
+                        - &ref_38
+                          const: CRC
+                          title: >-
+                            Coup de pouce Rénovation performante de bâtiment
+                            résidentiel collectif
+                        - &ref_39
+                          const: CRM
+                          title: >-
+                            Coup de pouce Rénovation performante d'une maison
+                            individuelle
+                        - &ref_40
+                          const: CDP
+                          title: Coup de pouce Chauffage
+                      $defs:
+                        ZNI: *ref_35
+                        CPE: *ref_36
+                        CFT: *ref_37
+                        CRC: *ref_38
+                        CRM: *ref_39
+                        CDP: *ref_40
+                        CDC:
+                          const: CDC
+                          title: Coup de pouce Covoiturage
+                      examples:
+                        - ZNI
+                        - CPE
+                        - CFT
+                        - CRC
+                        - CRM
+                        - CDP
+                    version:
+                      type: string
+                      pattern: ^[0-9]+[.][0-9]+$
+                      examples:
+                        - '14.1'
+                        - '33.4'
+                    nom:
+                      type: string
+                    dateDebut:
+                      type: string
+                      format: date
+                    dateFin:
+                      type:
+                        - string
+                        - 'null'
+                      format: date
+                  required:
+                    - id
+                    - code
+                    - version
+                    - nom
+                    - dateDebut
+                    - dateFin
+  /bonifications/{id}:
+    get:
+      summary: Recherche une bonification par son identifiant unique
+      operationId: getBonificationById
+      tags:
+        - Bonification
+      parameters:
+        - name: id
+          in: path
+          schema: &ref_43
+            $id: https://schemas.ceeconnect.fr/formats/reference_bonification
+            $schema: https://json-schema.org/draft/2020-12/schema
+            title: Référence interne
+            type: string
+            pattern: >-
+              (ZNI|GPE-ZNI|ETS|CPE|GPE|CFT|CRC|CRM|CTH|CDP|CDC)([-][0-9]+)?v[0-9]*([-][0-9]*)?
+            examples:
+              - CRMv31-1
+              - CDP-1v20-1
+              - ZNIv35-1
+      responses:
+        '200':
+          description: Bonification retournée
+          content:
+            application/json:
+              schema: *ref_41
+        '404':
+          description: Bonification non trouvée
+  /bonus:
+    get:
+      summary: Recherche une liste des bonus par attributs
+      operationId: getBonusBy
+      tags:
+        - Bonus
+      parameters:
+        - name: code
+          in: query
+          schema: *ref_42
+        - name: date
+          in: query
+          description: Date prévue de l'opération
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Bonus retournés
+          content:
+            application/json:
+              schema:
+                type: array
+                items: *ref_41
+  /bonus/{id}:
+    get:
+      summary: Recherche un bonus par son identifiant unique
+      operationId: getBonusById
+      tags:
+        - Bonus
+      parameters:
+        - name: id
+          in: path
+          schema: *ref_43
+      responses:
+        '200':
+          description: Bonus retourné
+          content:
+            application/json:
+              schema: *ref_41
+        '404':
+          description: Bonus non trouvé
+components:
+  schemas:
+    fiche: *ref_28
+    bonification: *ref_41
+    codeSecteur: *ref_44
+    codeSousSecteur: *ref_45
+    codeFiche: *ref_46
+    codeBonification: *ref_42
+    referenceFiche: *ref_47
+    referenceBonification: *ref_43

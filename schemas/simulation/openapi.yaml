@@ -1,0 +1,3394 @@
+openapi: 3.1.0
+info:
+  title: Simulation
+  version: 1.0.0
+paths:
+  /simulations:
+    post:
+      summary: >-
+        Évalue l'éligibilité et le volume CEE d'une opération standardisée
+        d'économies d'énergie
+      operationId: createSimulations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $schema: https://json-schema.org/draft/2020-12/schema
+              title: Simulation CEE
+              description: >-
+                Simulation de l'éligibilité et du volume CEE d'une opération
+                standardisée d'économies d'énergie
+              type: object
+              properties:
+                fiche:
+                  $id: https://schemas.ceeconnect.fr/formats/reference_fiche
+                  $schema: https://json-schema.org/draft/2020-12/schema
+                  title: Référence interne
+                  type: string
+                  pattern: >-
+                    (AGRI|BAR|BAT|IND|RES|TRA)-(BA|CH|EC|EN|EQ|SE|TH|UT)-[0-9]+(-SE)?v[0-9]+[-][0-9]+
+                  examples:
+                    - BAR-EN-101v39-4
+                    - BAR-EN-102v39-2
+                    - BAR-EN-103v39-5
+                bonification:
+                  $id: https://schemas.ceeconnect.fr/formats/reference_bonification
+                  $schema: https://json-schema.org/draft/2020-12/schema
+                  title: Référence interne
+                  type: string
+                  pattern: >-
+                    (ZNI|GPE-ZNI|ETS|CPE|GPE|CFT|CRC|CRM|CTH|CDP|CDC)([-][0-9]+)?v[0-9]*([-][0-9]*)?
+                  examples:
+                    - CRMv31-1
+                    - CDP-1v20-1
+                    - ZNIv35-1
+                dateEngagement:
+                  type: string
+                  format: date
+              required:
+                - fiche
+                - dateEngagement
+              anyOf:
+                - &ref_46
+                  allOf:
+                    - $schema: https://json-schema.org/draft/2020-12/schema
+                      title: BAR-EN-101v39-4
+                      type: object
+                      properties:
+                        adresse: &ref_0
+                          title: Adresse
+                          type: object
+                          properties:
+                            banId:
+                              title: >-
+                                Identifiant de l'adresse dans la Base Adresse
+                                Nationale
+                              type: string
+                              maxLength: 240
+                            numero:
+                              title: Numéro dans la voie
+                              type: string
+                              maxLength: 240
+                            voie:
+                              title: Nom de voie ou lieu dit
+                              type: string
+                              maxLength: 240
+                            complement:
+                              title: Complément d'adresse
+                              type: string
+                              maxLength: 240
+                            commune:
+                              title: Nom de la commune
+                              type: string
+                              maxLength: 240
+                            codePostal:
+                              title: Code postal
+                              type: string
+                              pattern: >-
+                                ^([02][1-9]|[12345678][0-9]|9[012345]|97[12346])[0-9]{3}$
+                            codeCommune:
+                              title: Code INSEE
+                              type: string
+                              pattern: >-
+                                ^([02][1-9]|2[AB]|[1345678][0-9]|9[012345]|97[12346])[0-9]{3}$
+                          required:
+                            - voie
+                            - commune
+                            - codePostal
+                            - codeCommune
+                        caracteristiques:
+                          title: Caractéristiques
+                          type: object
+                          properties:
+                            ancienneteBatiment: &ref_1
+                              title: Ancienneté du bâtiment
+                              description: >-
+                                Ancienneté du bâtiment à la date d'engagement de
+                                l'opération
+                              oneOf:
+                                - title: Bâtiment de moins de 2 ans
+                                  const: NEUF
+                                - title: Bâtiment de plus de deux ans
+                                  const: EXISTANT
+                            quantite:
+                              title: Surface d'isolant (m²)
+                              type: number
+                              minimum: 0
+                          required:
+                            - ancienneteBatiment
+                            - quantite
+                      required:
+                        - adresse
+                        - caracteristiques
+                      examples:
+                        - adresse: &ref_2
+                            banId: 92062_A100
+                            voie: Grande Arche Défense
+                            commune: Puteaux
+                            codeCommune: '92062'
+                            codePostal: '92800'
+                          caracteristiques:
+                            ancienneteBatiment: EXISTANT
+                            quantite: 100
+                    - properties:
+                        fiche:
+                          const: BAR-EN-101v39-4
+                      required:
+                        - fiche
+                - &ref_47
+                  allOf:
+                    - $schema: https://json-schema.org/draft/2020-12/schema
+                      title: BAR-EN-102v39-2
+                      type: object
+                      properties:
+                        adresse: *ref_0
+                        caracteristiques:
+                          title: Caractéristiques
+                          type: object
+                          properties:
+                            ancienneteBatiment: *ref_1
+                            quantite:
+                              title: Surface d'isolant (m²)
+                              type: number
+                              minimum: 0
+                          required:
+                            - ancienneteBatiment
+                            - quantite
+                      required:
+                        - adresse
+                        - caracteristiques
+                      examples:
+                        - adresse: *ref_2
+                          caracteristiques:
+                            ancienneteBatiment: EXISTANT
+                            quantite: 100
+                    - properties:
+                        fiche:
+                          const: BAR-EN-102v39-2
+                      required:
+                        - fiche
+                - &ref_48
+                  allOf:
+                    - $schema: https://json-schema.org/draft/2020-12/schema
+                      title: BAR-EN-103v39-5
+                      type: object
+                      properties:
+                        adresse: *ref_0
+                        caracteristiques:
+                          title: Caractéristiques
+                          type: object
+                          properties:
+                            ancienneteBatiment: *ref_1
+                            quantite:
+                              title: Surface d'isolant (m²)
+                              type: number
+                              minimum: 0
+                          required:
+                            - ancienneteBatiment
+                            - quantite
+                      required:
+                        - adresse
+                        - caracteristiques
+                      examples:
+                        - adresse: *ref_2
+                          caracteristiques:
+                            ancienneteBatiment: EXISTANT
+                            quantite: 100
+                    - properties:
+                        fiche:
+                          const: BAR-EN-103v39-5
+                      required:
+                        - fiche
+                - &ref_49
+                  allOf:
+                    - $schema: https://json-schema.org/draft/2020-12/schema
+                      title: BAR-EN-104v14-1
+                      type: object
+                      properties:
+                        adresse: *ref_0
+                        caracteristiques:
+                          title: Caractéristiques
+                          type: object
+                          properties:
+                            ancienneteBatiment: *ref_1
+                            energieChauffage:
+                              title: Energie de chauffage principale
+                              type: string
+                              oneOf: &ref_24
+                                - &ref_31
+                                  const: ELECTRICITE
+                                  title: Electricité
+                                - &ref_27
+                                  const: COMBUSTIBLES
+                                  title: Combustibles
+                            quantite:
+                              title: Nombre d'équipements
+                              description: >-
+                                Nombre de fenêtres ou portes-fenêtres complètes
+                                avec vitrage isolant posées
+                              type: number
+                              minimum: 0
+                          required:
+                            - ancienneteBatiment
+                            - energieChauffage
+                            - quantite
+                      required:
+                        - adresse
+                        - caracteristiques
+                      examples:
+                        - adresse: *ref_2
+                          caracteristiques:
+                            ancienneteBatiment: EXISTANT
+                            energieChauffage: ELECTRICITE
+                            quantite: 10
+                    - properties:
+                        fiche:
+                          const: BAR-EN-104v14-1
+                      required:
+                        - fiche
+                - &ref_50
+                  allOf:
+                    - $schema: https://json-schema.org/draft/2020-12/schema
+                      title: BAR-EN-105v39-3
+                      type: object
+                      properties:
+                        adresse: *ref_0
+                        caracteristiques:
+                          title: Caractéristiques
+                          type: object
+                          properties:
+                            ancienneteBatiment: *ref_1
+                            quantite:
+                              title: Surface d'isolant (m²)
+                              type: number
+                              minimum: 0
+                          required:
+                            - ancienneteBatiment
+                            - quantite
+                      required:
+                        - adresse
+                        - caracteristiques
+                      examples:
+                        - adresse: *ref_2
+                          caracteristiques:
+                            ancienneteBatiment: EXISTANT
+                            quantite: 100
+                    - properties:
+                        fiche:
+                          const: BAR-EN-105v39-3
+                      required:
+                        - fiche
+                - &ref_51
+                  allOf:
+                    - $schema: https://json-schema.org/draft/2020-12/schema
+                      title: BAR-EN-106v33-4
+                      type: object
+                      properties:
+                        adresse: *ref_0
+                        caracteristiques:
+                          title: Caractéristiques
+                          type: object
+                          properties:
+                            typeBatiment: &ref_6
+                              $id: >-
+                                https://schemas.ceeconnect.fr/enums/bar/type_batiment
+                              $schema: https://json-schema.org/draft/2020-12/schema
+                              title: Type de bâtiment
+                              type: string
+                              oneOf:
+                                - &ref_3
+                                  title: Maison individuelle
+                                  const: MAISON
+                                - &ref_4
+                                  title: Appartement
+                                  const: APPARTEMENT
+                                - &ref_5
+                                  title: Immeuble collectif
+                                  const: IMMEUBLE
+                              $defs:
+                                MAISON: *ref_3
+                                APPARTEMENT: *ref_4
+                                IMMEUBLE: *ref_5
+                                individuel:
+                                  title: Type de logement
+                                  type: string
+                                  oneOf:
+                                    - *ref_3
+                                    - *ref_4
+                                collectif:
+                                  title: Type de bâtiment
+                                  type: string
+                                  oneOf:
+                                    - *ref_5
+                                    - *ref_4
+                                batiment:
+                                  title: Type de bâtiment
+                                  type: string
+                                  oneOf:
+                                    - *ref_3
+                                    - *ref_5
+                            ancienneteBatiment: *ref_1
+                            quantite:
+                              title: Surface d'isolant (m²)
+                              type: number
+                              minimum: 0
+                          required:
+                            - typeBatiment
+                            - ancienneteBatiment
+                            - quantite
+                      required:
+                        - adresse
+                        - caracteristiques
+                      examples:
+                        - adresse: &ref_7
+                            banId: '97411_1060_00002'
+                            numero: '2'
+                            voie: Rue de Paris
+                            commune: Saint-Denis
+                            codeCommune: '97411'
+                            codePostal: '97400'
+                          caracteristiques:
+                            typeBatiment: IMMEUBLE
+                            ancienneteBatiment: EXISTANT
+                            quantite: 100
+                    - properties:
+                        fiche:
+                          const: BAR-EN-106v33-4
+                      required:
+                        - fiche
+                - &ref_52
+                  allOf:
+                    - $schema: https://json-schema.org/draft/2020-12/schema
+                      title: BAR-EN-107v20-3
+                      type: object
+                      properties:
+                        adresse: *ref_0
+                        caracteristiques:
+                          title: Caractéristiques
+                          type: object
+                          properties:
+                            typeBatiment: *ref_6
+                            ancienneteBatiment: *ref_1
+                            quantite:
+                              title: Surface d'isolant (m²)
+                              type: number
+                              minimum: 0
+                            resistanceThermique:
+                              title: Résistance thermmique de l'isolant
+                              type: number
+                              minimum: 0.5
+                          required:
+                            - typeBatiment
+                            - ancienneteBatiment
+                            - quantite
+                            - resistanceThermique
+                      required:
+                        - adresse
+                        - caracteristiques
+                      examples:
+                        - adresse: *ref_7
+                          caracteristiques:
+                            typeBatiment: IMMEUBLE
+                            ancienneteBatiment: EXISTANT
+                            quantite: 100
+                            resistanceThermique: 0.5
+                    - properties:
+                        fiche:
+                          const: BAR-EN-107v20-3
+                      required:
+                        - fiche
+                - &ref_53
+                  allOf:
+                    - $schema: https://json-schema.org/draft/2020-12/schema
+                      title: BAR-EN-108v37-2
+                      type: object
+                      properties:
+                        adresse: *ref_0
+                        caracteristiques:
+                          title: Caractéristiques
+                          type: object
+                          properties:
+                            ancienneteBatiment: *ref_1
+                            quantite:
+                              title: Nombre de fermetures
+                              description: Nombre de fermetures isolantes posées
+                              type: integer
+                              minimum: 0
+                          required:
+                            - ancienneteBatiment
+                            - quantite
+                      required:
+                        - adresse
+                        - caracteristiques
+                      examples:
+                        - adresse: *ref_2
+                          caracteristiques:
+                            ancienneteBatiment: EXISTANT
+                            quantite: 10
+                    - properties:
+                        fiche:
+                          const: BAR-EN-108v37-2
+                      required:
+                        - fiche
+                - &ref_54
+                  allOf:
+                    - $schema: https://json-schema.org/draft/2020-12/schema
+                      title: BAR-EN-109v24-1
+                      type: object
+                      properties:
+                        adresse: *ref_0
+                        caracteristiques:
+                          title: Caractéristiques
+                          type: object
+                          properties:
+                            typeBatiment: *ref_6
+                            ancienneteBatiment: *ref_1
+                            quantite:
+                              title: Surface de toiture protégée (m²)
+                              type: number
+                              minimum: 0
+                          required:
+                            - typeBatiment
+                            - ancienneteBatiment
+                            - quantite
+                      required:
+                        - adresse
+                        - caracteristiques
+                      examples:
+                        - adresse: *ref_2
+                          caracteristiques:
+                            typeBatiment: IMMEUBLE
+                            ancienneteBatiment: EXISTANT
+                            quantite: 500
+                    - properties:
+                        fiche:
+                          const: BAR-EN-109v24-1
+                      required:
+                        - fiche
+                - &ref_55
+                  allOf:
+                    - $schema: https://json-schema.org/draft/2020-12/schema
+                      title: BAR-EN-110v35-1
+                      type: object
+                      properties:
+                        adresse: *ref_0
+                        caracteristiques:
+                          title: Caractéristiques
+                          type: object
+                          properties:
+                            ancienneteBatiment: *ref_1
+                            quantite:
+                              title: Nombre de fenêtres
+                              description: >-
+                                Nombre de fenêtres ou portes-fenêtres complètes
+                                pariétodynamiques posée
+                              type: integer
+                              minimum: 0
+                          required:
+                            - ancienneteBatiment
+                            - quantite
+                      required:
+                        - adresse
+                        - caracteristiques
+                      examples:
+                        - adresse: *ref_2
+                          caracteristiques:
+                            ancienneteBatiment: EXISTANT
+                            quantite: 200
+                    - properties:
+                        fiche:
+                          const: BAR-EN-110v35-1
+                      required:
+                        - fiche
+                - &ref_56
+                  allOf:
+                    - $schema: https://json-schema.org/draft/2020-12/schema
+                      title: BAR-EQ-110v15-1
+                      type: object
+                      properties:
+                        caracteristiques:
+                          title: Caractéristiques
+                          type: object
+                          properties:
+                            ancienneteBatiment: *ref_1
+                            quantite:
+                              title: Quantité de luminaire
+                              type: integer
+                              minimum: 0
+                            indiceProtectionChocs:
+                              $id: >-
+                                https://schemas.ceeconnect.fr/enums/bar/indice_protection_chocs
+                              $schema: https://json-schema.org/draft/2020-12/schema
+                              $comment: >-
+                                https://www.seton.fr/media/cms/files/stfr/DMEU_TDS_2584_std.lang.all.pdf
+                              title: Indice de de protection aux chocs
+                              type: string
+                              oneOf:
+                                - &ref_9
+                                  const: '00'
+                                  title: '00'
+                                - &ref_10
+                                  const: '01'
+                                  title: '01'
+                                - &ref_11
+                                  const: '02'
+                                  title: '02'
+                                - &ref_12
+                                  const: '03'
+                                  title: '03'
+                                - &ref_13
+                                  const: '04'
+                                  title: '04'
+                                - &ref_14
+                                  const: '05'
+                                  title: '05'
+                                - &ref_15
+                                  const: '06'
+                                  title: '06'
+                                - &ref_16
+                                  const: '07'
+                                  title: '07'
+                                - &ref_17
+                                  const: '08'
+                                  title: '08'
+                                - &ref_18
+                                  const: '09'
+                                  title: '09'
+                                - &ref_8
+                                  const: '10'
+                                  title: '10'
+                              $defs:
+                                '10': *ref_8
+                                '00': *ref_9
+                                '01': *ref_10
+                                '02': *ref_11
+                                '03': *ref_12
+                                '04': *ref_13
+                                '05': *ref_14
+                                '06': *ref_15
+                                '07': *ref_16
+                                '08': *ref_17
+                                '09': *ref_18
+                            detecteurLumiere:
+                              title: Présence d'un détecteur de lumière
+                              type: boolean
+                            detecteurPresence:
+                              title: Présence d'un détecteur de présence
+                              type: boolean
+                          required:
+                            - ancienneteBatiment
+                            - quantite
+                            - indiceProtectionChocs
+                            - detecteurLumiere
+                            - detecteurPresence
+                      required:
+                        - caracteristiques
+                      examples:
+                        - caracteristiques:
+                            ancienneteBatiment: EXISTANT
+                            detecteurLumiere: true
+                            detecteurPresence: false
+                            quantite: 50
+                            indiceProtectionChocs: '08'
+                    - properties:
+                        fiche:
+                          const: BAR-EQ-110v15-1
+                      required:
+                        - fiche
+                - &ref_57
+                  allOf:
+                    - $schema: https://json-schema.org/draft/2020-12/schema
+                      title: BAR-EQ-115v28-1
+                      typeBatiment: object
+                      properties:
+                        adresse: *ref_0
+                        caracteristiques:
+                          title: Caractéristiques
+                          type: object
+                          properties:
+                            typeBatiment: *ref_6
+                            ancienneteBatiment: *ref_1
+                            surfaceHabitable:
+                              title: Surface habitable du logement (m²)
+                              type: number
+                              minimum: 0
+                            optionSuiviConfort:
+                              title: Option suivi de confort
+                              type: boolean
+                          required:
+                            - typeBatiment
+                            - ancienneteBatiment
+                            - surfaceHabitable
+                            - optionSuiviConfort
+                      required:
+                        - adresse
+                        - caracteristiques
+                      examples:
+                        - adresse: *ref_2
+                          caracteristiques:
+                            typeBatiment: MAISON
+                            ancienneteBatiment: EXISTANT
+                            surfaceHabitable: 100
+                            optionSuiviConfort: true
+                    - properties:
+                        fiche:
+                          const: BAR-EQ-115v28-1
+                      required:
+                        - fiche
+                - &ref_58
+                  allOf:
+                    - $schema: https://json-schema.org/draft/2020-12/schema
+                      title: BAR-SE-104v19-1
+                      type: object
+                      properties:
+                        adresse: *ref_0
+                        caracteristiques:
+                          title: Caractéristiques
+                          type: object
+                          properties:
+                            typeBatiment: *ref_6
+                            ancienneteBatiment: *ref_1
+                            logements:
+                              title: Nombre d'appartements
+                              description: >-
+                                Nombre d'appartements raccordés à l'installation
+                                collective de chauffage
+                              type: integer
+                              minimum: 0
+                          required:
+                            - typeBatiment
+                            - ancienneteBatiment
+                            - logements
+                      required:
+                        - adresse
+                        - caracteristiques
+                      examples:
+                        - adresse: *ref_2
+                          caracteristiques:
+                            typeBatiment: IMMEUBLE
+                            ancienneteBatiment: EXISTANT
+                            logements: 10
+                    - properties:
+                        fiche:
+                          const: BAR-SE-104v19-1
+                      required:
+                        - fiche
+                - &ref_59
+                  allOf:
+                    - $schema: https://json-schema.org/draft/2020-12/schema
+                      title: BAR-SE-105v28-1
+                      type: object
+                      properties:
+                        adresse: *ref_0
+                        caracteristiques:
+                          title: Caractéristiques
+                          type: object
+                          properties:
+                            typeBatiment: *ref_6
+                            ancienneteBatiment: *ref_1
+                            logements:
+                              title: Nombre d'appartements
+                              description: >-
+                                Nombre d'appartements raccordés à l'installation
+                                collective de chauffage
+                              type: integer
+                              minimum: 0
+                            dureeGarantie:
+                              title: Durée de garantie
+                              description: >-
+                                Durée de garantie du contrat de performance
+                                énergétique
+                              type: integer
+                              minimum: 2
+                          required:
+                            - typeBatiment
+                            - ancienneteBatiment
+                            - logements
+                            - dureeGarantieCpe
+                      required:
+                        - adresse
+                        - caracteristiques
+                      examples:
+                        - adresse:
+                            banId: '06088_3250_00005'
+                            numero: '5'
+                            voie: Rue de l'Hôtel de Ville
+                            commune: Nice
+                            codeCommune: '06300'
+                            codePostal: '06088'
+                          caracteristiques:
+                            typeBatiment: IMMEUBLE
+                            ancienneteBatiment: EXISTANT
+                            logements: 20
+                            dureeGarantie: 2
+                    - properties:
+                        fiche:
+                          const: BAR-SE-105v28-1
+                      required:
+                        - fiche
+                - &ref_60
+                  allOf:
+                    - $schema: https://json-schema.org/draft/2020-12/schema
+                      title: BAR-SE-106v32-1
+                      type: object
+                      properties:
+                        adresse: *ref_0
+                        caracteristiques:
+                          title: Caractéristiques
+                          type: object
+                          properties:
+                            typeBatiment: *ref_6
+                            consommationSuivie:
+                              $id: >-
+                                https://schemas.ceeconnect.fr/enums/bar/consommation_suivie
+                              $schema: https://json-schema.org/draft/2020-12/schema
+                              title: Nature des consommations suivies
+                              type: string
+                              oneOf:
+                                - &ref_19
+                                  const: CHAUFFAGE_ELECTRIQUE
+                                  title: Chauffage électrique
+                                - &ref_20
+                                  const: CHAUFFAGE_GAZ
+                                  title: Chauffage gaz
+                                - &ref_21
+                                  const: ELECTRICITE_SPECIFIQUE
+                                  title: Électricité spécifique
+                              $defs:
+                                CHAUFFAGE_ELECTRIQUE: *ref_19
+                                CHAUFFAGE_GAZ: *ref_20
+                                ELECTRICITE_SPECIFIQUE: *ref_21
+                          required:
+                            - typeBatiment
+                            - consommationSuivie
+                      required:
+                        - adresse
+                        - caracteristiques
+                      examples:
+                        - adresse:
+                            banId: '84007_2653'
+                            voie: Place de l'Horloge
+                            commune: Avignon
+                            codeCommune: '84000'
+                            codePostal: '84007'
+                          caracteristiques:
+                            typeBatiment: MAISON
+                            consommationSuivie: CHAUFFAGE_ELECTRIQUE
+                    - properties:
+                        fiche:
+                          const: BAR-SE-106v32-1
+                      required:
+                        - fiche
+                - &ref_61
+                  allOf:
+                    - $schema: https://json-schema.org/draft/2020-12/schema
+                      title: BAR-SE-107v37-1
+                      type: object
+                      properties:
+                        adresse: *ref_0
+                        caracteristiques:
+                          title: Caractéristiques
+                          type: object
+                          properties:
+                            typeBatiment: *ref_6
+                            ancienneteBatiment: *ref_1
+                            logements:
+                              title: Nombre d'appartements
+                              description: >-
+                                Nombre d'appartements raccordés à un réseau de
+                                chaleur
+                              type: integer
+                              minimum: 0
+                          required:
+                            - typeBatiment
+                            - ancienneteBatiment
+                            - logements
+                      required:
+                        - adresse
+                        - caracteristiques
+                      examples:
+                        - adresse: *ref_2
+                          caracteristiques:
+                            typeBatiment: IMMEUBLE
+                            ancienneteBatiment: EXISTANT
+                            logements: 20
+                    - properties:
+                        fiche:
+                          const: BAR-SE-107v37-1
+                      required:
+                        - fiche
+                - &ref_62
+                  allOf:
+                    - $schema: https://json-schema.org/draft/2020-12/schema
+                      title: BAR-SE-108v48-1
+                      type: object
+                      properties:
+                        adresse: *ref_0
+                        caracteristiques:
+                          title: Caractéristiques
+                          type: object
+                          properties:
+                            typeBatiment: *ref_6
+                            ancienneteBatiment: *ref_1
+                          required:
+                            - typeBatiment
+                            - ancienneteBatiment
+                      required:
+                        - adresse
+                        - caracteristiques
+                      examples:
+                        - adresse: *ref_2
+                          caracteristiques:
+                            typeBatiment: MAISON
+                            ancienneteBatiment: EXISTANT
+                    - properties:
+                        fiche:
+                          const: BAR-SE-108v48-1
+                      required:
+                        - fiche
+                - &ref_63
+                  allOf:
+                    - $schema: https://json-schema.org/draft/2020-12/schema
+                      title: BAR-TH-101v17-1
+                      type: object
+                      properties:
+                        adresse: *ref_0
+                        caracteristiques:
+                          title: Caractéristiques
+                          type: object
+                          properties:
+                            typeBatiment: *ref_6
+                            ancienneteBatiment: *ref_1
+                          required:
+                            - typeBatiment
+                            - ancienneteBatiment
+                      required:
+                        - adresse
+                        - caracteristiques
+                      examples:
+                        - adresse: *ref_2
+                          caracteristiques:
+                            typeBatiment: MAISON
+                            ancienneteBatiment: EXISTANT
+                    - properties:
+                        fiche:
+                          const: BAR-TH-101v17-1
+                      required:
+                        - fiche
+                - &ref_64
+                  allOf:
+                    - $schema: https://json-schema.org/draft/2020-12/schema
+                      title: BAR-TH-102v17-1
+                      type: object
+                      properties:
+                        adresse: *ref_0
+                        caracteristiques:
+                          title: Caractéristiques
+                          type: object
+                          properties:
+                            typeBatiment: *ref_6
+                            ancienneteBatiment: *ref_1
+                            besoinEauChaudeSanitaire:
+                              title: Besoin annuel d'ECS (kWh/an)
+                              description: >-
+                                Besoin annuel d'eau chaude sanitaire à produire
+                                par l'énergie solaire
+                              type: number
+                              minimum: 0
+                            productionSolaireUtile:
+                              title: Production solaire utile (kWh/an)
+                              type: number
+                              minimum: 0
+                            tauxCouverture:
+                              title: Taux de couverture (%)
+                              description: >-
+                                Taux de couverture du chauffe-eau solaire
+                                collectif (%)
+                              minimum: 0
+                          required:
+                            - typeBatiment
+                            - ancienneteBatiment
+                            - besoinEauChaudeSanitaire
+                            - productionSolaireUtile
+                            - tauxCouverture
+                      required:
+                        - adresse
+                        - caracteristiques
+                      examples:
+                        - adresse: *ref_2
+                          caracteristiques:
+                            typeBatiment: MAISON
+                            ancienneteBatiment: EXISTANT
+                            besoinEauChaudeSanitaire: 100000
+                            productionSolaireUtile: 80000
+                            tauxCouverture: 80
+                    - properties:
+                        fiche:
+                          const: BAR-TH-102v17-1
+                      required:
+                        - fiche
+                - &ref_65
+                  allOf:
+                    - $schema: https://json-schema.org/draft/2020-12/schema
+                      title: BAR-TH-104v41-3
+                      type: object
+                      properties:
+                        adresse: *ref_0
+                        caracteristiques:
+                          title: Caractéristiques
+                          type: object
+                          properties:
+                            typeBatiment: *ref_6
+                            ancienneteBatiment: *ref_1
+                            surfaceChauffee:
+                              title: Surface chauffée par la pompe à chaleur
+                              type: number
+                              minimum: 0
+                            performanceEnergetique:
+                              title: Efficacité énergétique saisonnière
+                              type: number
+                              minimum: 102
+                          required:
+                            - typeBatiment
+                            - ancienneteBatiment
+                            - surfaceChauffee
+                            - performanceEnergetique
+                      required:
+                        - adresse
+                        - caracteristiques
+                      examples:
+                        - adresse: *ref_2
+                          caracteristiques:
+                            typeBatiment: MAISON
+                            ancienneteBatiment: EXISTANT
+                            surfaceChauffee: 100
+                            performanceEnergetique: 110
+                    - properties:
+                        fiche:
+                          const: BAR-TH-104v41-3
+                      required:
+                        - fiche
+                - &ref_66
+                  allOf:
+                    - $schema: https://json-schema.org/draft/2020-12/schema
+                      title: BAR-TH-106v23-2
+                      type: object
+                      properties:
+                        adresse: *ref_0
+                        caracteristiques:
+                          title: Caractéristiques
+                          type: object
+                          properties:
+                            typeBatiment: *ref_6
+                            ancienneteBatiment: *ref_1
+                          required:
+                            - typeBatiment
+                            - ancienneteBatiment
+                          allOf:
+                            - if:
+                                properties:
+                                  typeBatiment: *ref_3
+                                required:
+                                  - typeBatiment
+                              then:
+                                properties:
+                                  surfaceHabitable:
+                                    title: Surface habitable du logement (m²)
+                                    type: number
+                                    minimum: 0
+                                required:
+                                  - surfaceHabitable
+                            - if:
+                                properties:
+                                  typeBatiment: *ref_5
+                                required:
+                                  - typeBatiment
+                              then:
+                                properties:
+                                  logements:
+                                    title: Nombre d'appartements
+                                    description: Nombre d'appartements équipés
+                                    type: integer
+                                    minimum: 0
+                                required:
+                                  - logements
+                      required:
+                        - adresse
+                        - caracteristiques
+                      examples:
+                        - adresse: *ref_2
+                          caracteristiques:
+                            typeBatiment: MAISON
+                            ancienneteBatiment: EXISTANT
+                            surfaceHabitable: 100
+                    - properties:
+                        fiche:
+                          const: BAR-TH-106v23-2
+                      required:
+                        - fiche
+                - &ref_67
+                  allOf:
+                    - $schema: https://json-schema.org/draft/2020-12/schema
+                      title: BAR-TH-107-SEv14-1
+                      type: object
+                      properties:
+                        adresse: *ref_0
+                        caracteristiques:
+                          title: Caractéristiques
+                          type: object
+                          properties:
+                            typeBatiment: *ref_6
+                            ancienneteBatiment: *ref_1
+                            logements:
+                              title: Nombre d'appartements
+                              description: >-
+                                Nombre d'appartements raccordés à la chaudière
+                                collective
+                              type: integer
+                              minimum: 0
+                            puissanceNominale:
+                              title: Puissance nominale (kW)
+                              description: >-
+                                Puissance nominale de la chaudière collective en
+                                kW
+                              type: integer
+                              minimum: 0
+                            dureeContrat:
+                              title: Durée du contrat
+                              type: integer
+                              minimum: 1
+                          required:
+                            - typeBatiment
+                            - ancienneteBatiment
+                            - logements
+                            - puissanceNominale
+                            - dureeContrat
+                      required:
+                        - adresse
+                        - caracteristiques
+                      examples:
+                        - adresse: *ref_2
+                          caracteristiques:
+                            typeBatiment: MAISON
+                            ancienneteBatiment: EXISTANT
+                            logements: 50
+                            puissanceNominale: 100
+                            dureeContrat: 10
+                    - properties:
+                        fiche:
+                          const: BAR-TH-107-SEv14-1
+                      required:
+                        - fiche
+                - &ref_68
+                  allOf:
+                    - $schema: https://json-schema.org/draft/2020-12/schema
+                      $comment: 'TODO : données d''entrée pour le calcul du coefficient R'
+                      title: BAR-TH-107v14-1
+                      type: object
+                      properties:
+                        adresse: *ref_0
+                        caracteristiques:
+                          title: Caractéristiques
+                          type: object
+                          properties:
+                            typeBatiment: *ref_6
+                            ancienneteBatiment: *ref_1
+                            logements:
+                              title: Nombre d'appartements
+                              description: >-
+                                Nombre d'appartements raccordés à la chaudière
+                                collective
+                              type: integer
+                              minimum: 0
+                            puissanceNominale:
+                              title: Puissance nominale (kW)
+                              description: >-
+                                Puissance nominale de la chaudière collective en
+                                kW
+                              type: integer
+                              minimum: 0
+                          required:
+                            - typeBatiment
+                            - ancienneteBatiment
+                            - logements
+                            - puissanceNominale
+                      required:
+                        - adresse
+                        - caracteristiques
+                      examples:
+                        - adresse: *ref_2
+                          caracteristiques:
+                            typeBatiment: MAISON
+                            ancienneteBatiment: EXISTANT
+                            logements: 50
+                            puissanceNominale: 100
+                    - properties:
+                        fiche:
+                          const: BAR-TH-107v14-1
+                      required:
+                        - fiche
+                - &ref_69
+                  allOf:
+                    - $schema: https://json-schema.org/draft/2020-12/schema
+                      title: BAR-TH-110v16-1
+                      type: object
+                      properties:
+                        adresse: *ref_0
+                        caracteristiques:
+                          title: Caractéristiques
+                          type: object
+                          properties:
+                            typeBatiment: *ref_6
+                            ancienneteBatiment: *ref_1
+                            quantite:
+                              title: Nombre de radiateurs
+                              type: integer
+                              minimum: 0
+                          required:
+                            - typeBatiment
+                            - ancienneteBatiment
+                            - quantite
+                          allOf:
+                            - if:
+                                properties:
+                                  typeBatiment: *ref_4
+                                required:
+                                  - typeBatiment
+                              then:
+                                properties:
+                                  typeInstallationChauffage:
+                                    title: Type d'installation de chauffage
+                                    $id: >-
+                                      https://schemas.ceeconnect.fr/enums/bar/type_installation
+                                    $schema: >-
+                                      https://json-schema.org/draft/2020-12/schema
+                                    type: string
+                                    oneOf: &ref_25
+                                      - &ref_22
+                                        const: INDIVIDUEL
+                                        title: Installation individuelle
+                                      - &ref_23
+                                        const: COLLECTIF
+                                        title: Installation collective
+                                    $defs: &ref_26
+                                      INDIVIDUEL: *ref_22
+                                      COLLECTIF: *ref_23
+                                required:
+                                  - typeInstallationChauffage
+                      required:
+                        - adresse
+                        - caracteristiques
+                      examples:
+                        - adresse: *ref_2
+                          caracteristiques:
+                            typeBatiment: APPARTEMENT
+                            ancienneteBatiment: EXISTANT
+                            typeInstallationChauffage: COLLECTIF
+                            quantite: 10
+                    - properties:
+                        fiche:
+                          const: BAR-TH-110v16-1
+                      required:
+                        - fiche
+                - &ref_70
+                  allOf:
+                    - $schema: https://json-schema.org/draft/2020-12/schema
+                      title: BAR-TH-111v17-1
+                      type: object
+                      properties:
+                        adresse: *ref_0
+                        caracteristiques:
+                          title: Caractéristiques
+                          type: object
+                          properties:
+                            typeBatiment: *ref_6
+                            ancienneteBatiment: *ref_1
+                            energieChauffage:
+                              title: Energie de chauffage principale
+                              type: string
+                              oneOf: *ref_24
+                            surfaceHabitable:
+                              title: Surface habitable du logement (m²)
+                              type: number
+                              minimum: 0
+                          required:
+                            - typeBatiment
+                            - ancienneteBatiment
+                            - energieChauffage
+                            - surfaceHabitable
+                      required:
+                        - adresse
+                        - caracteristiques
+                      examples:
+                        - adresse: *ref_2
+                          caracteristiques:
+                            typeBatiment: MAISON
+                            ancienneteBatiment: EXISTANT
+                            energieChauffage: ELECTRICITE
+                            surfaceHabitable: 100
+                    - properties:
+                        fiche:
+                          const: BAR-TH-111v17-1
+                      required:
+                        - fiche
+                - &ref_71
+                  allOf:
+                    - $schema: https://json-schema.org/draft/2020-12/schema
+                      title: BAR-TH-112v46-3
+                      type: object
+                      properties:
+                        adresse: *ref_0
+                        caracteristiques:
+                          title: Caractéristiques
+                          type: object
+                          properties:
+                            typeBatiment: *ref_6
+                            ancienneteBatiment: *ref_1
+                            performanceEnergetique:
+                              title: Efficacité énergétique saisonnière
+                              type: number
+                              minimum: 66
+                          required:
+                            - typeBatiment
+                            - ancienneteBatiment
+                            - performanceEnergetique
+                      required:
+                        - adresse
+                        - caracteristiques
+                      exemples:
+                        - adresse: *ref_2
+                          caracteristiques:
+                            typeBatiment: MAISON
+                            ancienneteBatiment: EXISTANT
+                            performanceEnergetique: 70
+                    - properties:
+                        fiche:
+                          const: BAR-TH-112v46-3
+                      required:
+                        - fiche
+                - &ref_72
+                  allOf:
+                    - $schema: https://json-schema.org/draft/2020-12/schema
+                      title: BAR-TH-113v41-3
+                      type: object
+                      properties:
+                        adresse: *ref_0
+                        caracteristiques:
+                          title: Caractéristiques
+                          type: object
+                          properties:
+                            typeBatiment: *ref_6
+                            ancienneteBatiment: *ref_1
+                          required:
+                            - typeBatiment
+                            - ancienneteBatiment
+                      required:
+                        - adresse
+                        - caracteristiques
+                      examples:
+                        - adresse: *ref_2
+                          caracteristiques:
+                            typeBatiment: MAISON
+                            ancienneteBatiment: EXISTANT
+                    - properties:
+                        fiche:
+                          const: BAR-TH-113v41-3
+                      required:
+                        - fiche
+                - &ref_73
+                  allOf:
+                    - $schema: https://json-schema.org/draft/2020-12/schema
+                      title: BAR-TH-116v17-1
+                      type: object
+                      properties:
+                        adresse: *ref_0
+                        caracteristiques:
+                          title: Caractéristiques
+                          type: object
+                          properties:
+                            typeBatiment: *ref_6
+                            ancienneteBatiment: *ref_1
+                            surfaceChauffee:
+                              title: Surface chauffée par le plancher chauffant (m²)
+                              type: number
+                              minimum: 0
+                          required:
+                            - typeBatiment
+                            - ancienneteBatiment
+                            - surfaceChauffee
+                          allOf:
+                            - if:
+                                properties:
+                                  typeBatiment: *ref_4
+                                required:
+                                  - typeBatiment
+                              then:
+                                properties:
+                                  typeInstallationChauffage:
+                                    title: Type d'installation de chauffage
+                                    $id: >-
+                                      https://schemas.ceeconnect.fr/enums/bar/type_installation
+                                    $schema: >-
+                                      https://json-schema.org/draft/2020-12/schema
+                                    type: string
+                                    oneOf: *ref_25
+                                    $defs: *ref_26
+                                required:
+                                  - typeInstallationChauffage
+                      required:
+                        - adresse
+                        - caracteristiques
+                      examples:
+                        - adresse: *ref_2
+                          caracteristiques:
+                            typeBatiment: MAISON
+                            ancienneteBatiment: EXISTANT
+                            surfaceChauffee: 100
+                    - properties:
+                        fiche:
+                          const: BAR-TH-116v17-1
+                      required:
+                        - fiche
+                - &ref_74
+                  allOf:
+                    - $schema: https://json-schema.org/draft/2020-12/schema
+                      title: BAR-TH-117v14-1
+                      type: object
+                      properties:
+                        adresse: *ref_0
+                        caracteristiques:
+                          title: Caractéristiques
+                          type: object
+                          properties:
+                            typeBatiment: *ref_6
+                            ancienneteBatiment: *ref_1
+                            quantite:
+                              title: Nombre de robinets thermostatiques installés
+                              type: integer
+                              minimum: 0
+                          required:
+                            - typeBatiment
+                            - ancienneteBatiment
+                            - quantite
+                          allOf:
+                            - if:
+                                properties:
+                                  typeBatiment: *ref_4
+                                required:
+                                  - typeBatiment
+                              then:
+                                properties:
+                                  typeInstallationChauffage:
+                                    title: Type d'installation de chauffage
+                                    $id: >-
+                                      https://schemas.ceeconnect.fr/enums/bar/type_installation
+                                    $schema: >-
+                                      https://json-schema.org/draft/2020-12/schema
+                                    type: string
+                                    oneOf: *ref_25
+                                    $defs: *ref_26
+                                required:
+                                  - typeInstallationChauffage
+                      required:
+                        - adresse
+                        - caracteristiques
+                      examples:
+                        - adresse: *ref_2
+                          caracteristiques:
+                            typeBatiment: MAISON
+                            ancienneteBatiment: EXISTANT
+                            quantite: 10
+                    - properties:
+                        fiche:
+                          const: BAR-TH-117v14-1
+                      required:
+                        - fiche
+                - &ref_75
+                  allOf:
+                    - $schema: https://json-schema.org/draft/2020-12/schema
+                      title: BAR-TH-118v14-1
+                      type: object
+                      properties:
+                        adresse: *ref_0
+                        caracteristiques:
+                          title: Caractéristiques
+                          type: object
+                          properties:
+                            typeBatiment: *ref_6
+                            ancienneteBatiment: *ref_1
+                            energieChauffage:
+                              title: Energie de chauffage principale
+                              type: string
+                              oneOf: *ref_24
+                          required:
+                            - typeBatiment
+                            - ancienneteBatiment
+                            - energieChauffage
+                          allOf:
+                            - if:
+                                properties:
+                                  typeBatiment: *ref_3
+                                required:
+                                  - typeBatiment
+                              then:
+                                properties:
+                                  surfaceChauffee:
+                                    title: >-
+                                      Surface chauffée par le système de
+                                      chauffage existant
+                                    type: number
+                                    minimum: 0
+                                required:
+                                  - surfaceChauffee
+                            - if:
+                                properties:
+                                  typeBatiment: *ref_4
+                                required:
+                                  - typeBatiment
+                              then:
+                                properties:
+                                  typeInstallationChauffage:
+                                    title: Type d'installation de chauffage
+                                    $id: >-
+                                      https://schemas.ceeconnect.fr/enums/bar/type_installation
+                                    $schema: >-
+                                      https://json-schema.org/draft/2020-12/schema
+                                    type: string
+                                    oneOf: *ref_25
+                                    $defs: *ref_26
+                                required:
+                                  - typeInstallationChauffage
+                            - if:
+                                properties:
+                                  typeInstallationChauffage: *ref_23
+                                required:
+                                  - typeInstallationChauffage
+                              then:
+                                properties:
+                                  energieChauffage: *ref_27
+                                  logements:
+                                    title: >-
+                                      Nombre d'appartements raccordés à la
+                                      chaudière collective
+                                    type: integer
+                                    minimum: 0
+                                required:
+                                  - energieChauffage
+                                  - logements
+                      required:
+                        - adresse
+                        - caracteristiques
+                      examples:
+                        - adresse: *ref_2
+                          caracteristiques:
+                            typeBatiment: MAISON
+                            ancienneteBatiment: EXISTANT
+                            energieChauffage: COMBUSTIBLES
+                            surfaceChauffee: 100
+                    - properties:
+                        fiche:
+                          const: BAR-TH-118v14-1
+                      required:
+                        - fiche
+                - &ref_76
+                  allOf:
+                    - $schema: https://json-schema.org/draft/2020-12/schema
+                      $comment: 'TODO : Données d''entrée pour le calcul du coefficient R'
+                      title: BAR-TH-122v15-1
+                      type: object
+                      properties:
+                        adresse: *ref_0
+                        caracteristiques:
+                          title: Caractéristiques
+                          type: object
+                          properties:
+                            typeBatiment: *ref_6
+                            ancienneteBatiment: *ref_1
+                            logements:
+                              title: >-
+                                Nombre d'appartements raccordés à la chaudière
+                                collective
+                              type: integer
+                              minimum: 0
+                          required:
+                            - typeBatiment
+                            - ancienneteBatiment
+                            - logements
+                      required:
+                        - adresse
+                        - caracteristiques
+                      examples:
+                        - adresse: *ref_2
+                          caracteristiques:
+                            typeBatiment: MAISON
+                            ancienneteBatiment: EXISTANT
+                            logements: 10
+                    - properties:
+                        fiche:
+                          const: BAR-TH-122v15-1
+                      required:
+                        - fiche
+                - &ref_77
+                  allOf:
+                    - $schema: https://json-schema.org/draft/2020-12/schema
+                      title: BAR-TH-123v17-1
+                      type: object
+                      properties:
+                        adresse: *ref_0
+                        caracteristiques:
+                          title: Caractéristiques
+                          type: object
+                          properties:
+                            typeBatiment: *ref_6
+                            ancienneteBatiment: *ref_1
+                            logements:
+                              title: >-
+                                Nombre d'appartements raccordés à la chaudière
+                                collective
+                              type: integer
+                              minimum: 0
+                          required:
+                            - typeBatiment
+                            - ancienneteBatiment
+                            - logements
+                      required:
+                        - adresse
+                        - caracteristiques
+                      examples:
+                        - adresse: *ref_2
+                          caracteristiques:
+                            typeBatiment: MAISON
+                            ancienneteBatiment: EXISTANT
+                            logements: 10
+                    - properties:
+                        fiche:
+                          const: BAR-TH-123v17-1
+                      required:
+                        - fiche
+                - &ref_78
+                  allOf:
+                    - $schema: https://json-schema.org/draft/2020-12/schema
+                      title: BAR-TH-124v35-3
+                      type: object
+                      properties:
+                        adresse: *ref_0
+                        caracteristiques:
+                          title: Caractéristiques
+                          type: object
+                          properties:
+                            typeBatiment: *ref_6
+                            ancienneteBatiment: *ref_1
+                            surfaceCapteurs:
+                              title: Surface des capteurs solaires (m²)
+                              type: number
+                              minimum: 0
+                              maximum: 40
+                          required:
+                            - typeBatiment
+                            - ancienneteBatiment
+                            - surfaceCapteurs
+                      required:
+                        - adresse
+                        - caracteristiques
+                      examples:
+                        - adresse: *ref_2
+                          caracteristiques:
+                            typeBatiment: MAISON
+                            ancienneteBatiment: EXISTANT
+                            surfaceCapteurs: 10
+                    - properties:
+                        fiche:
+                          const: BAR-TH-124v35-3
+                      required:
+                        - fiche
+                - &ref_79
+                  allOf:
+                    - $schema: https://json-schema.org/draft/2020-12/schema
+                      title: BAR-TH-125v40-4
+                      type: object
+                      properties:
+                        adresse: *ref_0
+                        caracteristiques:
+                          title: Caractéristiques
+                          type: object
+                          properties:
+                            ancienneteBatiment: *ref_1
+                            typeInstallation:
+                              title: Type d'installation
+                              $id: >-
+                                https://schemas.ceeconnect.fr/enums/bar/type_installation
+                              $schema: https://json-schema.org/draft/2020-12/schema
+                              type: string
+                              oneOf: *ref_25
+                              $defs: *ref_26
+                          required:
+                            - ancienneteBatiment
+                            - typeInstallation
+                          allOf:
+                            - if:
+                                properties:
+                                  typeInstallation: *ref_22
+                                required:
+                                  - typeInstallation
+                              then:
+                                properties:
+                                  typeEquipement:
+                                    title: Type de VMC double flux
+                                    type: string
+                                    oneOf:
+                                      - const: AUTOREGLABLE
+                                        title: VMC autoréglable
+                                      - const: MODULE
+                                        title: VMC modulée
+                                  surfaceHabitable:
+                                    title: Surface habitable du logement (m²)
+                                    type: number
+                                    minimum: 0
+                                required:
+                                  - typeEquipement
+                                  - surfaceHabitable
+                            - if:
+                                properties:
+                                  typeInstallation: *ref_23
+                                required:
+                                  - typeInstallation
+                              then:
+                                properties:
+                                  typeEquipement:
+                                    const: MODULE
+                                    title: VMC modulée
+                                  logements:
+                                    title: >-
+                                      Nombre de logements raccordés à la VMC
+                                      double flux
+                                    type: integer
+                                    minimum: 0
+                                required:
+                                  - typeEquipement
+                                  - logements
+                      required:
+                        - adresse
+                        - caracteristiques
+                      examples:
+                        - adresse: *ref_2
+                          caracteristiques:
+                            ancienneteBatiment: EXISTANT
+                            typeInstallation: INDIVIDUEL
+                            typeEquipement: AUTOREGLABLE
+                            surfaceHabitable: 100
+                    - properties:
+                        fiche:
+                          const: BAR-TH-125v40-4
+                      required:
+                        - fiche
+                - &ref_80
+                  allOf:
+                    - $schema: https://json-schema.org/draft/2020-12/schema
+                      title: BAR-TH-125v54-5
+                      type: object
+                      properties:
+                        adresse: *ref_0
+                        caracteristiques:
+                          title: Caractéristiques
+                          type: object
+                          properties:
+                            ancienneteBatiment: *ref_1
+                            typeInstallation:
+                              title: Type d'installation
+                              $id: >-
+                                https://schemas.ceeconnect.fr/enums/bar/type_installation
+                              $schema: https://json-schema.org/draft/2020-12/schema
+                              type: string
+                              oneOf: *ref_25
+                              $defs: *ref_26
+                            typeEquipement:
+                              title: Type de VMC simple flux
+                              type: string
+                              oneOf: &ref_32
+                                - const: TYPE_A
+                                  title: VMC hygroréglable de type A
+                                - const: TYPE_B
+                                  title: VMC hygroréglable de type B
+                          required:
+                            - ancienneteBatiment
+                            - typeInstallation
+                            - typeEquipement
+                          allOf:
+                            - if:
+                                properties:
+                                  typeInstallation: *ref_22
+                                required:
+                                  - typeInstallation
+                              then:
+                                properties:
+                                  typeCaisson:
+                                    title: Type de caisson
+                                    type: string
+                                    oneOf:
+                                      - &ref_28
+                                        const: BASSE_CONSOMMATION
+                                        title: Caisson basse consommation
+                                  surfaceHabitable:
+                                    title: Surface habitable du logement (m²)
+                                    type: number
+                                    minimum: 0
+                                required:
+                                  - typeCaisson
+                                  - surfaceHabitable
+                            - if:
+                                properties:
+                                  typeInstallation: *ref_23
+                                required:
+                                  - typeInstallation
+                              then:
+                                properties:
+                                  typeCaisson:
+                                    title: Type de caisson
+                                    $id: >-
+                                      https://schemas.ceeconnect.fr/enums/bar/type_caisson_vmc
+                                    $schema: >-
+                                      https://json-schema.org/draft/2020-12/schema
+                                    description: >-
+                                      Type de caisson pour ventilation mécanique
+                                      centralisée
+                                    type: string
+                                    oneOf:
+                                      - *ref_28
+                                      - &ref_29
+                                        const: STANDARD
+                                        title: Caisson standard
+                                      - &ref_30
+                                        const: BASSE_PRESSION
+                                        title: Caisson basse pression
+                                    $defs:
+                                      BASSE_CONSOMMATION: *ref_28
+                                      STANDARD: *ref_29
+                                      BASSE_PRESSION: *ref_30
+                                  logements:
+                                    title: >-
+                                      Nombre de logements raccordés à la VMC
+                                      simple flux
+                                    type: integer
+                                    minimum: 0
+                                required:
+                                  - typeCaisson
+                                  - logements
+                      required:
+                        - adresse
+                        - caracteristiques
+                      examples:
+                        - adresse: *ref_2
+                          caracteristiques:
+                            ancienneteBatiment: EXISTANT
+                            typeInstallation: INDIVIDUEL
+                            typeCaisson: BASSE_CONSOMMATION
+                            surfaceHabitable: 100
+                    - properties:
+                        fiche:
+                          const: BAR-TH-127v40-4
+                      required:
+                        - fiche
+                - &ref_81
+                  allOf:
+                    - $schema: https://json-schema.org/draft/2020-12/schema
+                      title: BAR-TH-129v27-3
+                      type: object
+                      properties:
+                        adresse: *ref_0
+                        caracteristiques:
+                          title: Caractéristiques
+                          type: object
+                          properties:
+                            typeBatiment: *ref_6
+                            ancienneteBatiment: *ref_1
+                            surfaceChauffee:
+                              title: Surface chauffée par la pompe à chaleur (m²)
+                              type: number
+                              minimum: 0
+                            performanceEnergetique:
+                              title: Coefficient de performance saisonnier
+                              type: number
+                              minimum: 3.9
+                          required:
+                            - typeBatiment
+                            - ancienneteBatiment
+                            - surfaceChauffee
+                            - performanceEnergetique
+                      required:
+                        - adresse
+                        - caracteristiques
+                      examples:
+                        - adresse: *ref_2
+                          caracteristiques:
+                            typeBatiment: MAISON
+                            ancienneteBatiment: EXISTANT
+                            sperformanceEnergetique: 4.7
+                            surfaceChauffee: 100
+                    - properties:
+                        fiche:
+                          const: BAR-TH-129v27-3
+                      required:
+                        - fiche
+                - &ref_82
+                  allOf:
+                    - $schema: https://json-schema.org/draft/2020-12/schema
+                      title: BAR-TH-130v26-1
+                      type: object
+                      properties:
+                        adresse: *ref_0
+                        caracteristiques:
+                          title: Caractéristiques
+                          type: object
+                          properties:
+                            energieChauffage:
+                              title: Energie de chauffage principale
+                              type: string
+                              oneOf: *ref_24
+                            energieEauChaudeSanitaire:
+                              title: Energie de production de l'eau chaude sanitaire
+                              oneOf:
+                                - *ref_31
+                                - *ref_27
+                                - const: HYBRIDE
+                                  title: Module hybride
+                            surfaceThermique:
+                              title: Surface thermique (m²)
+                              description: >-
+                                Surface thermique du bâtiment au sens de la
+                                règlementation thermique
+                              type: number
+                              minimum: 0
+                            cefBat:
+                              title: Consommation finale du bâtiment (kWh/m²/an)
+                              description: >-
+                                Consommation conventionnelle du bâtiment
+                                exprimée en énergie finale
+                              type: number
+                            cepMax:
+                              title: Consommation primaire maximale (kWh/m²/an)
+                              description: >-
+                                Consommation conventionnelle exprimée en énergie
+                                finale maximale
+                              type: number
+                          required:
+                            - energieChauffage
+                            - energieEauChaudeSanitaire
+                            - surfaceThermique
+                            - cefBat
+                            - cepMax
+                      required:
+                        - adresse
+                        - caracteristiques
+                      examples:
+                        - adresse: *ref_2
+                          caracteristiques:
+                            energieChauffage: ELECTRICITE
+                            energieEcs: ELECTRICITE
+                            surfaceThermique: 120
+                            cefBat: 20
+                            cepMax: 50
+                    - properties:
+                        fiche:
+                          const: BAR-TH-130v26-1
+                      required:
+                        - fiche
+                - &ref_83
+                  allOf:
+                    - $schema: https://json-schema.org/draft/2020-12/schema
+                      title: BAR-TH-135v35-2
+                      type: object
+                      properties:
+                        adresse: *ref_0
+                        caracteristiques:
+                          title: Caractéristiques
+                          type: object
+                          properties:
+                            typeBatiment: *ref_6
+                            ancienneteBatiment: *ref_1
+                            typeEquipement:
+                              title: Type de chauffe-eau solaire
+                              type: string
+                              oneOf:
+                                - const: CESC
+                                  title: Chauffe-eau solaire à appoint centralisé
+                                - const: CESCI
+                                  title: Chauffe-eau solaire à appoint individualisé
+                            besoinEauChaudeSanitaire:
+                              title: Besoin annuel d'eau chaude sanitaire (kWh/an)
+                              description: >-
+                                Besoin annuel en eau chaude sanitaire à produire
+                                par l'énergie solaire exprimé en kWh par an et
+                                issu de l'étude de dimensionnemen
+                              type: number
+                              minimum: 0
+                            tauxCouverture:
+                              title: Taux de couverture solaire (%)
+                              description: >-
+                                Indiquer le taux de couverture par l'énergie
+                                solaire de l'installation issu de l'étude de
+                                dimensionnement
+                              type: number
+                              minimum: 0
+                          required:
+                            - typeBatiment
+                            - ancienneteBatiment
+                            - typeEquipement
+                            - besoinEauChaudeSanitaire
+                            - tauxCouverture
+                      required:
+                        - adresse
+                        - caracteristiques
+                      examples:
+                        - adresse: *ref_7
+                          caracteristiques:
+                            typeBatiment: IMMEUBLE
+                            ancienneteBatiment: EXISTANT
+                            typeEquipement: CESCI
+                            besoinEauChaudeSanitaire: 100000
+                            tauxCouverture: 80
+                    - properties:
+                        fiche:
+                          const: BAR-TH-135v35-2
+                      required:
+                        - fiche
+                - &ref_84
+                  allOf:
+                    - $schema: https://json-schema.org/draft/2020-12/schema
+                      title: BAR-TH-137v45-3
+                      type: object
+                      properties:
+                        adresse: *ref_0
+                        caracteristiques:
+                          title: Caractéristiques
+                          type: object
+                          properties:
+                            typeBatiment: *ref_6
+                            ancienneteBatiment: *ref_1
+                          required:
+                            - typeBatiment
+                            - ancienneteBatiment
+                          allOf:
+                            - if:
+                                properties:
+                                  typeBatiment: *ref_3
+                                required:
+                                  - typeBatiment
+                              then:
+                                properties:
+                                  surfaceHabitable:
+                                    title: Surface habitable (m²)
+                                    type: number
+                                    minimum: 0
+                                required:
+                                  - surfaceHabitable
+                            - if:
+                                properties:
+                                  typeBatiment: *ref_6
+                                required:
+                                  - typeBatiment
+                              then:
+                                properties:
+                                  logements:
+                                    title: >-
+                                      Nombre d'appartements raccordés au réseau
+                                      de chaleur
+                                    type: integer
+                                    minimum: 0
+                                required:
+                                  - logements
+                      required:
+                        - adresse
+                        - caracteristiques
+                      examples:
+                        - adresse: *ref_2
+                          caracteristiques:
+                            typeBatiment: MAISON
+                            ancienneteBatiment: EXISTANT
+                            surfaceHabitable: 100
+                    - properties:
+                        fiche:
+                          const: BAR-TH-137v45-3
+                      required:
+                        - fiche
+                - &ref_85
+                  allOf:
+                    - $schema: https://json-schema.org/draft/2020-12/schema
+                      title: BAR-TH-139v23-2
+                      type: object
+                      properties:
+                        caracteristiques:
+                          title: Caractéristiques
+                          type: object
+                          properties:
+                            typeBatiment: *ref_6
+                            ancienneteBatiment: *ref_1
+                            puissanceNominale:
+                              title: Puissance nominale du moteur de la pompe (kW)
+                              type: number
+                              minimum: 0.75
+                              maximum: 375
+                          required:
+                            - typeBatiment
+                            - ancienneteBatiment
+                            - puissanceNominale
+                      required:
+                        - caracteristiques
+                      examples:
+                        - adresse: *ref_2
+                          caracteristiques:
+                            typeBatiment: IMMEUBLE
+                            ancienneteBatiment: EXISTANT
+                            puissanceNominale: 50
+                    - properties:
+                        fiche:
+                          const: BAR-TH-139v23-2
+                      required:
+                        - fiche
+                - &ref_86
+                  allOf:
+                    - $schema: https://json-schema.org/draft/2020-12/schema
+                      title: BAR-TH-141v15-1
+                      type: object
+                      properties:
+                        adresse: *ref_0
+                        caracteristiques:
+                          title: Caractéristiques
+                          type: object
+                          properties:
+                            typeBatiment: *ref_6
+                            ancienneteBatiment: *ref_1
+                            quantite:
+                              title: Nombre de climatiseurs
+                              description: >-
+                                Nombre de climatiseurs dont les caractéristiques
+                                techniques sont identiques
+                              type: integer
+                              minimum: 1
+                            puissanceFrigorifique:
+                              title: Puissance frigorifique (BTU/h)
+                              type: number
+                              enum:
+                                - 7000
+                                - 9000
+                            performanceEnergetique:
+                              title: Coefficient d'éfficacité énergétique saisonnier
+                              type: string
+                              oneOf:
+                                - const: A+++
+                                  title: A+++
+                                - const: A++
+                                  title: A++
+                                - const: A+
+                                  title: A+
+                                - const: A
+                                  title: A
+                              examples:
+                                - A+++
+                          required:
+                            - typeBatiment
+                            - ancienneteBatiment
+                            - quantite
+                            - puissanceFrigorifique
+                            - performanceEnergetique
+                      required:
+                        - adresse
+                        - caracteristiques
+                      examples:
+                        - adresse: *ref_7
+                          caracteristiques:
+                            typeBatiment: MAISON
+                            ancienneteBatiment: EXISTANT
+                            quantite: 5
+                            puissanceFrigorifique: 7000
+                            performanceEnergetique: 5.1
+                    - properties:
+                        fiche:
+                          const: BAR-TH-141v15-1
+                      required:
+                        - fiche
+                - &ref_87
+                  allOf:
+                    - $schema: https://json-schema.org/draft/2020-12/schema
+                      title: BAR-TH-143v25-1
+                      type: object
+                      properties:
+                        adresse: *ref_0
+                        caracteristiques:
+                          title: Caractéristiques
+                          type: object
+                          properties:
+                            typeBatiment: *ref_6
+                            ancienneteBatiment: *ref_1
+                          required:
+                            - typeBatiment
+                            - ancienneteBatiment
+                      required:
+                        - adresse
+                        - caracteristiques
+                      examples:
+                        - adresse: *ref_2
+                          caracteristiques:
+                            typeBatiment: MAISON
+                            ancienneteBatiment: EXISTANT
+                    - properties:
+                        fiche:
+                          const: BAR-TH-143v25-1
+                      required:
+                        - fiche
+                - &ref_88
+                  allOf:
+                    - $schema: https://json-schema.org/draft/2020-12/schema
+                      title: BAR-TH-143v51-5
+                      type: object
+                      properties:
+                        adresse: *ref_0
+                        caracteristiques:
+                          title: Caractéristiques
+                          type: object
+                          properties:
+                            typeBatiment: *ref_6
+                            ancienneteBatiment: *ref_1
+                          required:
+                            - typeBatiment
+                            - ancienneteBatiment
+                      required:
+                        - adresse
+                        - caracteristiques
+                      examples:
+                        - adresse: *ref_2
+                          caracteristiques:
+                            typeBatiment: MAISON
+                            ancienneteBatiment: EXISTANT
+                    - properties:
+                        fiche:
+                          const: BAR-TH-143v51-5
+                      required:
+                        - fiche
+                - &ref_89
+                  allOf:
+                    - $schema: https://json-schema.org/draft/2020-12/schema
+                      title: BAR-TH-145v36-3
+                      type: object
+                      properties:
+                        adresse: *ref_0
+                        caracteristiques:
+                          title: Caractéristiques
+                          type: object
+                          properties:
+                            typeBatiment: *ref_6
+                            ancienneteBatiment: *ref_1
+                            surfaceHabitable:
+                              title: Surface habitable (m²)
+                              type: number
+                              minimum: 0
+                            cefInitial:
+                              title: >-
+                                Consommation conventionnelle avant travaux
+                                (kWh/m²/an)
+                              type: number
+                              minimum: 0
+                            cefProjet:
+                              title: >-
+                                Consommation conventionnelle après travaux
+                                (kWh/m²/an)
+                              type: number
+                              minimum: 0
+                          required:
+                            - typeBatiment
+                            - ancienneteBatiment
+                            - surfaceHabitable
+                            - cefInitial
+                            - cefProjet
+                      required:
+                        - adresse
+                        - caracteristiques
+                      examples:
+                        - adresse: *ref_2
+                          caracteristiques:
+                            typeBatiment: MAISON
+                            ancienneteBatiment: EXISTANT
+                            surfaceHabitable: 2000
+                            cefInitial: 400
+                            cefProjet: 200
+                    - properties:
+                        fiche:
+                          const: BAR-TH-145v36-3
+                      required:
+                        - fiche
+                - &ref_90
+                  allOf:
+                    - $schema: https://json-schema.org/draft/2020-12/schema
+                      title: BAR-TH-148v15-2
+                      type: object
+                      properties:
+                        caracteristiques:
+                          title: Caractéristiques
+                          type: object
+                          properties:
+                            typeBatiment: *ref_6
+                            ancienneteBatiment: *ref_1
+                          required:
+                            - typeBatiment
+                            - ancienneteBatiment
+                      required:
+                        - caracteristiques
+                      examples:
+                        - caracteristiques:
+                            typeBatiment: MAISON
+                            ancienneteBatiment: EXISTANT
+                    - properties:
+                        fiche:
+                          const: BAR-TH-148v15-2
+                      required:
+                        - fiche
+                - &ref_91
+                  allOf:
+                    - $schema: https://json-schema.org/draft/2020-12/schema
+                      title: BAR-TH-150v14-1
+                      type: object
+                      properties:
+                        adresse: *ref_0
+                        caracteristiques:
+                          title: Caractéristiques
+                          type: object
+                          properties:
+                            typeBatiment: *ref_6
+                            ancienneteBatiment: *ref_1
+                            energieChauffage:
+                              title: Energie de chauffage principale
+                              type: string
+                              oneOf: *ref_24
+                            logements:
+                              title: >-
+                                Nombre d'appartements raccordés à la pompe à
+                                chaleur
+                              type: integer
+                              minimum: 0
+                            usage:
+                              titles: Usages couverts par la pompe à chaleur
+                              title: Type d'usage
+                              type: string
+                              oneOf: &ref_39
+                                - const: CHAUFFAGE
+                                  title: Chauffage
+                                - const: CHAUFFAGE_ECS
+                                  title: Chauffage et eau chaude sanitaire
+                            puissanceNominale:
+                              title: Puissance nominale de l'équipement (kW)
+                              type: integer
+                              minimum: 0
+                          required:
+                            - typeBatiment
+                            - ancienneteBatiment
+                            - energieChauffage
+                            - logements
+                            - usages
+                            - puissanceNominale
+                          allOf:
+                            - if:
+                                properties:
+                                  puissanceNominale:
+                                    type: number
+                                    maximum: 400
+                                required:
+                                  - puissanceNominale
+                              then:
+                                properties:
+                                  performanceEnergetique:
+                                    title: Efficacité énergétique saisonnière (%)
+                                    type: number
+                                    minimum: 102
+                                required:
+                                  - performanceEnergetique
+                            - if:
+                                properties:
+                                  puissanceNominale:
+                                    type: number
+                                    exclusiveMinimum: 400
+                                required:
+                                  - puissanceNominale
+                              then:
+                                properties:
+                                  performanceEnergetique:
+                                    title: Coefficient de performance énergétique
+                                    type: number
+                                    minimum: 1.3
+                                required:
+                                  - performanceEnergetique
+                      required:
+                        - adresse
+                        - caracteristiques
+                      examples:
+                        - adresse: *ref_2
+                          caracteristiques:
+                            typeBatiment: MAISON
+                            ancienneteBatiment: EXISTANT
+                            logements: 20
+                            usages: CHAUFFAGE
+                            puissanceNominale: 300
+                            performanceEnergetique: 105
+                    - properties:
+                        fiche:
+                          const: BAR-TH-150v14-1
+                      required:
+                        - fiche
+                - &ref_92
+                  allOf:
+                    - $schema: https://json-schema.org/draft/2020-12/schema
+                      title: BAR-TH-155v40-4
+                      type: object
+                      properties:
+                        adresse: *ref_0
+                        caracteristiques:
+                          title: Caractéristiques
+                          type: object
+                          properties:
+                            ancienneteBatiment: *ref_1
+                            typeEquipement:
+                              title: Type de VMC simple flux
+                              type: string
+                              oneOf: *ref_32
+                            typeExtracteur:
+                              title: Type de d'extracteur
+                              $id: >-
+                                https://schemas.ceeconnect.fr/enums/bar/type_extracteur_vmc
+                              $schema: https://json-schema.org/draft/2020-12/schema
+                              type: string
+                              oneOf:
+                                - &ref_33
+                                  const: STANDARD
+                                  title: Extracteur standard
+                                - &ref_34
+                                  const: BASSE_CONSOMMATION
+                                  title: Extracteur basse consommation
+                              $defs:
+                                STANDARD: *ref_33
+                                BASSE_CONSOMMATION: *ref_34
+                            logements:
+                              title: >-
+                                Nombre de logements raccordés à la VMC double
+                                flux
+                              type: integer
+                              minimum: 0
+                          required:
+                            - ancienneteBatiment
+                            - typeEquipement
+                            - typeExtracteur
+                            - logements
+                      required:
+                        - adresse
+                        - caracteristiques
+                      examples:
+                        - adresse: *ref_2
+                          caracteristiques:
+                            ancienneteBatiment: EXISTANT
+                            logements: 20
+                            typeEquipement: TYPE_B
+                            typeExtracteur: STANDARD
+                    - properties:
+                        fiche:
+                          const: BAR-TH-155v40-4
+                      required:
+                        - fiche
+                - &ref_93
+                  allOf:
+                    - $schema: https://json-schema.org/draft/2020-12/schema
+                      title: BAR-TH-158v35-2
+                      type: object
+                      properties:
+                        adresse: *ref_0
+                        caracteristiques:
+                          title: Caractéristiques
+                          type: object
+                          properties:
+                            typeBatiment: *ref_6
+                            ancienneteBatiment: *ref_1
+                            quantite:
+                              title: Nombre d'émetteurs électriques installés
+                              type: integer
+                              minimum: 0
+                          required:
+                            - typeBatiment
+                            - ancienneteBatiment
+                            - quantite
+                      required:
+                        - adresse
+                        - caracteristiques
+                      examples:
+                        - adresse: *ref_2
+                          caracteristiques:
+                            typeBatiment: MAISON
+                            ancienneteBatiment: EXISTANT
+                            quantite: 10
+                    - properties:
+                        fiche:
+                          const: BAR-TH-158v35-2
+                      required:
+                        - fiche
+                - &ref_94
+                  allOf:
+                    - $schema: https://json-schema.org/draft/2020-12/schema
+                      title: BAR-TH-159v44-3
+                      type: object
+                      properties:
+                        adresse: *ref_0
+                        caracteristiques:
+                          title: Caractéristiques
+                          type: object
+                          properties:
+                            typeBatiment: *ref_6
+                            ancienneteBatiment: *ref_1
+                            surfaceChauffee:
+                              title: Surface chauffée par la pompe à chaleur (m²)
+                              type: number
+                              minimum: 0
+                            performanceEnergetique:
+                              title: Efficacité énergétique saisonnière
+                              type: number
+                              minimum: 111
+                          required:
+                            - typeBatiment
+                            - ancienneteBatiment
+                            - surfaceChauffee
+                            - performanceEnergetique
+                      required:
+                        - adresse
+                        - caracteristiques
+                      examples:
+                        - adresse: *ref_2
+                          caracteristiques:
+                            typeBatiment: MAISON
+                            ancienneteBatiment: EXISTANT
+                            performanceEnergetique: 120
+                            surfaceChauffee: 150
+                    - properties:
+                        fiche:
+                          const: BAR-TH-159v44-3
+                      required:
+                        - fiche
+                - &ref_95
+                  allOf:
+                    - $schema: https://json-schema.org/draft/2020-12/schema
+                      title: BAR-TH-159v50-4
+                      type: object
+                      properties:
+                        adresse: *ref_0
+                        caracteristiques:
+                          title: Caractéristiques
+                          type: object
+                          properties:
+                            typeBatiment:
+                              title: Type de logement
+                              type: string
+                              oneOf:
+                                - *ref_6
+                                - *ref_4
+                            ancienneteBatiment: *ref_1
+                            surfaceChauffee:
+                              title: Surface chauffée par la pompe à chaleur (m²)
+                              type: number
+                              minimum: 0
+                            performanceEnergetique:
+                              title: Efficacité énergétique saisonnière
+                              type: number
+                              minimum: 111
+                          required:
+                            - typeBatiment
+                            - ancienneteBatiment
+                            - surfaceChauffee
+                            - performanceEnergetique
+                      required:
+                        - adresse
+                        - caracteristiques
+                      examples:
+                        - adresse: *ref_2
+                          caracteristiques:
+                            typeBatiment: MAISON
+                            ancienneteBatiment: EXISTANT
+                            performanceEnergetique: 120
+                            surfaceChauffee: 150
+                    - properties:
+                        fiche:
+                          const: BAR-TH-159v50-4
+                      required:
+                        - fiche
+                - &ref_96
+                  allOf:
+                    - $schema: https://json-schema.org/draft/2020-12/schema
+                      title: BAR-TH-160v39-2
+                      type: object
+                      properties:
+                        adresse: *ref_0
+                        caracteristiques:
+                          title: Caractéristiques
+                          type: object
+                          properties:
+                            typeBatiment: *ref_6
+                            ancienneteBatiment: *ref_1
+                            quantite:
+                              title: >-
+                                Longueur isolée du réseau de chauffage ou d'ECS
+                                (m)
+                              description: >-
+                                Indiquer la longueur isolée du réseau de
+                                chauffage ou d'ECS hors du volume chauffé en
+                                mètre
+                              type: number
+                              minimum: 0
+                          required:
+                            - typeBatiment
+                            - ancienneteBatiment
+                            - quantite
+                      required:
+                        - adresse
+                        - caracteristiques
+                      examples:
+                        - adresse: *ref_2
+                          caracteristiques:
+                            typeBatiment: MAISON
+                            ancienneteBatiment: EXISTANT
+                            quantite: 50
+                    - properties:
+                        fiche:
+                          const: BAR-TH-160v39-2
+                      required:
+                        - fiche
+                - &ref_97
+                  allOf:
+                    - $schema: https://json-schema.org/draft/2020-12/schema
+                      title: BAR-TH-160v50-3
+                      type: object
+                      properties:
+                        adresse: *ref_0
+                        caracteristiques:
+                          title: Caractéristiques
+                          type: object
+                          properties:
+                            typeBatiment: *ref_6
+                            ancienneteBatiment: *ref_1
+                            quantite:
+                              title: >-
+                                Longueur isolée du réseau de chauffage ou d'ECS
+                                (m)
+                              description: >-
+                                Indiquer la longueur isolée du réseau de
+                                chauffage ou d'ECS hors du volume chauffé en
+                                mètre
+                              type: number
+                              minimum: 0
+                          required:
+                            - typeBatiment
+                            - ancienneteBatiment
+                            - quantite
+                      required:
+                        - adresse
+                        - caracteristiques
+                      examples:
+                        - adresse: *ref_2
+                          caracteristiques:
+                            typeBatiment: MAISON
+                            ancienneteBatiment: EXISTANT
+                            quantite: 50
+                    - properties:
+                        fiche:
+                          const: BAR-TH-160v50-3
+                      required:
+                        - fiche
+                - &ref_98
+                  allOf:
+                    - $schema: https://json-schema.org/draft/2020-12/schema
+                      title: BAR-TH-161v28-1
+                      type: object
+                      properties:
+                        adresse: *ref_0
+                        caracteristiques:
+                          title: Caractéristiques
+                          type: object
+                          properties:
+                            typeBatiment: *ref_6
+                            ancienneteBatiment: *ref_1
+                            equipements:
+                              title: Liste des housses isolantes installées
+                              type: array
+                              minContains: 1
+                              items:
+                                type: object
+                                properties:
+                                  typePointSingulier:
+                                    $id: >-
+                                      https://schemas.ceeconnect.fr/enums/bar/type_point_singulier
+                                    $schema: >-
+                                      https://json-schema.org/draft/2020-12/schema
+                                    title: Type de points singuliers
+                                    type: string
+                                    oneOf:
+                                      - &ref_35
+                                        const: ECHANGEUR
+                                        title: Echangeur à plaques
+                                      - &ref_36
+                                        const: HORS_ECHANGEUR
+                                        title: Autres
+                                    $defs:
+                                      ECHANGEUR: *ref_35
+                                      HORS_ECHANGEUR: *ref_36
+                                  temperatureFluide:
+                                    title: Température du fluide caloporteur (°C)
+                                    type: number
+                                    minimum: 50
+                                  quantite:
+                                    title: Nombre de housses isolantes installées
+                                    description: >-
+                                      Nombre de housses isolantes dont les
+                                      caractéristiques sont identiques
+                                    type: integer
+                                    minimum: 0
+                                required:
+                                  - typePointSingulier
+                                  - temperatureFluide
+                                  - quantite
+                                allOf:
+                                  - if:
+                                      properties:
+                                        typePointSingulier: *ref_36
+                                      required:
+                                        - typePointSingulier
+                                    then:
+                                      properties:
+                                        quantite:
+                                          title: >-
+                                            Nombre de houses isolantes mises en
+                                            place
+                                        diametre:
+                                          title: Diamètre nominal (mm)
+                                          type: number
+                                          minimum: 20
+                                      required:
+                                        - quantite
+                                        - diametre
+                                  - if:
+                                      properties:
+                                        typePointSingulier: *ref_35
+                                      required:
+                                        - typePointSingulier
+                                    then:
+                                      properties:
+                                        quantite:
+                                          title: Nombre d'échangeurs à plaques isolés
+                          required:
+                            - typeBatiment
+                            - ancienneteBatiment
+                            - equipements
+                      required:
+                        - adresse
+                        - caracteristiques
+                      examples:
+                        - adresse: *ref_2
+                          caracteristiques:
+                            typeBatiment: IMMEUBLE
+                            ancienneteBatiment: EXISTANT
+                            equipements:
+                              - typePointSingulier: HORS_ECHANGEUR
+                                quantite: 5
+                                diametre: 20
+                                temperatureFluide: 50
+                              - typePointSingulier: HORS_ECHANGEUR
+                                quantite: 5
+                                diametre: 65
+                                temperatureFluide: 50
+                    - properties:
+                        fiche:
+                          const: BAR-TH-161v28-1
+                      required:
+                        - fiche
+                - &ref_99
+                  allOf:
+                    - $schema: https://json-schema.org/draft/2020-12/schema
+                      title: BAR-TH-162v28-1
+                      type: object
+                      properties:
+                        adresse: *ref_0
+                        caracteristiques:
+                          title: Caractéristiques
+                          type: object
+                          properties:
+                            typeBatiment: *ref_6
+                            ancienneteBatiment: *ref_1
+                          required:
+                            - typeBatiment
+                            - ancienneteBatiment
+                      required:
+                        - adresse
+                        - caracteristiques
+                      examples:
+                        - adresse: *ref_2
+                          caracteristiques:
+                            typeBatiment: MAISON
+                            ancienneteBatiment: EXISTANT
+                    - properties:
+                        fiche:
+                          const: BAR-TH-162v28-1
+                      required:
+                        - fiche
+                - &ref_100
+                  allOf:
+                    - $schema: https://json-schema.org/draft/2020-12/schema
+                      title: BAR-TH-163v38-2
+                      type: object
+                      properties:
+                        adresse: *ref_0
+                        caracteristiques:
+                          title: Caractéristiques
+                          type: object
+                          properties:
+                            typeBatiment: *ref_6
+                            ancienneteBatiment: *ref_1
+                            quantite:
+                              title: Nombre de chaudières à raccorder au conduit
+                              type: integer
+                              minimum: 0
+                          required:
+                            - typeBatiment
+                            - ancienneteBatiment
+                            - quantite
+                      required:
+                        - adresse
+                        - caracteristiques
+                      examples:
+                        - adresse: *ref_2
+                          caracteristiques:
+                            typeBatiment: IMMEUBLE
+                            ancienneteBatiment: EXISTANT
+                            quantite: 10
+                    - properties:
+                        fiche:
+                          const: BAR-TH-163v38-2
+                      required:
+                        - fiche
+                - &ref_101
+                  allOf:
+                    - $schema: https://json-schema.org/draft/2020-12/schema
+                      title: BAR-TH-164v36-2
+                      type: object
+                      properties:
+                        adresse: *ref_0
+                        caracteristiques:
+                          title: Caractéristiques
+                          type: object
+                          properties:
+                            typeBatiment: *ref_6
+                            ancienneteBatiment: *ref_1
+                            surfaceHabitable:
+                              title: Surface habitable (m²)
+                              type: number
+                              minimum: 0
+                            cefInitial:
+                              title: >-
+                                Consommation d'énergie finale avant travaux
+                                (kWhef/m²/an)
+                              description: >-
+                                Consommation conventionnelle en énergie finale
+                                avant les travaux de rénovation issue de l'étude
+                                énergétique
+                              type: number
+                              minimum: 0
+                            cefProjet:
+                              title: >-
+                                Consommation d'énergie finale après travaux
+                                (kWhef/m²/an)
+                              description: >-
+                                Consommation conventionnelle en énergie finale
+                                après les travaux de rénovation issue de l'étude
+                                énergétique
+                              type: number
+                              minimum: 0
+                            cepProjet:
+                              title: >-
+                                Consommation d'énergie primaire après travaux
+                                (kWhef/m²/an)
+                              description: >-
+                                Consommation conventionnelle en énergie primaire
+                                après les travaux de rénovation issue de l'étude
+                                énergétique
+                              type: number
+                              minimum: 0
+                          required:
+                            - typeBatiment
+                            - ancienneteBatiment
+                            - surfaceHabitable
+                            - cefInitial
+                            - cefProjet
+                            - cepProjet
+                      required:
+                        - adresse
+                        - caracteristiques
+                      examples:
+                        - adresse: *ref_2
+                          caracteristiques:
+                            typeBatiment: MAISON
+                            ancienneteBatiment: EXISTANT
+                            surfaceHabitable: 100
+                            cefInitial: 60
+                            cefProjet: 30
+                            cepProjet: 30
+                    - properties:
+                        fiche:
+                          const: BAR-TH-164v36-2
+                      required:
+                        - fiche
+                - &ref_102
+                  allOf:
+                    - $schema: https://json-schema.org/draft/2020-12/schema
+                      title: BAR-TH-165v34-1
+                      type: object
+                      properties:
+                        caracteristiques:
+                          title: Caractéristiques
+                          type: object
+                          properties:
+                            typeBatiment: *ref_6
+                            ancienneteBatiment: *ref_1
+                            puissanceNominale:
+                              title: Puissance nominale de la chaudière (kW)
+                              type: number
+                              minimum: 0
+                            quantiteChaleurNette:
+                              title: Chaleur produite par la chaudière (kWh/an)
+                              description: >-
+                                Chaleur nette utile produite par la chaudière
+                                issue de l'étude de dimensionnement préalable à
+                                la réalisation des travaux
+                              type: number
+                              minimum: 0
+                          required:
+                            - typeBatiment
+                            - ancienneteBatiment
+                            - puissanceNominale
+                            - quantiteChaleurNette
+                      required:
+                        - caracteristiques
+                      examples:
+                        - caracteristiques:
+                            typeBatiment: MAISON
+                            ancienneteBatiment: EXISTANT
+                            quantiteChaleurNette: 140000
+                            puissanceNominale: 450
+                    - properties:
+                        fiche:
+                          const: BAR-TH-165v34-1
+                      required:
+                        - fiche
+                - &ref_103
+                  allOf:
+                    - $schema: https://json-schema.org/draft/2020-12/schema
+                      title: BAR-TH-166v38-1
+                      type: object
+                      properties:
+                        adresse: *ref_0
+                        caracteristiques:
+                          title: Caractéristiques
+                          type: object
+                          properties:
+                            typeBatiment: *ref_6
+                            ancienneteBatiment: *ref_1
+                            logements:
+                              title: >-
+                                Nombre d'appartements raccordés à la pompe à
+                                chaleur
+                              type: integer
+                              minimum: 0
+                            usage:
+                              titles: Usages couverts par la pompe à chaleur
+                              $id: >-
+                                https://schemas.ceeconnect.fr/enums/bar/type_usage
+                              $schema: https://json-schema.org/draft/2020-12/schema
+                              title: Type d'usage
+                              type: string
+                              oneOf: &ref_44
+                                - &ref_37
+                                  const: CHAUFFAGE
+                                  title: Chauffage
+                                - &ref_38
+                                  const: ECS
+                                  title: Eau chaude sanitaire
+                              $defs: &ref_45
+                                CHAUFFAGE: *ref_37
+                                ECS: *ref_38
+                                CHAUFFAGE_ECS:
+                                  const: CHAUFFAGE_ECS
+                                  title: Chauffage et eau chaude sanitaire
+                                chauffages:
+                                  title: Type d'usage
+                                  type: string
+                                  oneOf: *ref_39
+                                ecs:
+                                  title: Type d'usage
+                                  type: string
+                                  oneOf:
+                                    - const: ECS
+                                      title: Eau chaude sanitaire
+                                    - const: CHAUFFAGE_ECS
+                                      title: Chauffage et eau chaude sanitaire
+                            performanceEnergetique:
+                              title: Efficacité énergétique saisonnière
+                              type: number
+                              minimum: 111
+                            puissanceNominale:
+                              title: Puissance nominale de l'équipement (kW)
+                              type: integer
+                              minimum: 0
+                            puissanceChaufferie:
+                              title: Puissance totale de la chaufferie (kW)
+                              description: Puissance totale de la chaufferie après travaux
+                              type: number
+                              minimum: 0
+                          required:
+                            - typeBatiment
+                            - ancienneteBatiment
+                            - logements
+                            - usage
+                            - performanceEnergetique
+                            - puissanceNominale
+                            - puissanceChaufferie
+                      required:
+                        - adresse
+                        - caracteristiques
+                      examples:
+                        - adresse: *ref_2
+                          caracteristiques:
+                            typeBatiment: MAISON
+                            ancienneteBatiment: EXISTANT
+                            logements: 10
+                            usage: CHAUFFAGE
+                            performanceEnergetique: 111
+                    - properties:
+                        fiche:
+                          const: BAR-TH-166v38-1
+                      required:
+                        - fiche
+                - &ref_104
+                  allOf:
+                    - $schema: https://json-schema.org/draft/2020-12/schema
+                      title: BAR-TH-167v38-1
+                      type: object
+                      properties:
+                        adresse: *ref_0
+                        caracteristiques:
+                          title: Caractéristiques
+                          type: object
+                          properties:
+                            typeBatiment: *ref_6
+                            ancienneteBatiment: *ref_1
+                          required:
+                            - typeBatiment
+                            - ancienneteBatiment
+                          allOf:
+                            - if:
+                                properties:
+                                  typeBatiment: *ref_3
+                                required:
+                                  - typeBatiment
+                              then:
+                                properties:
+                                  surfaceHabitable:
+                                    title: Surface habitable (m²)
+                                    type: number
+                                    minimum: 0
+                                  typeEquipement: &ref_43
+                                    $id: >-
+                                      https://schemas.ceeconnect.fr/enums/bar/type_chauffe_bain
+                                    $schema: >-
+                                      https://json-schema.org/draft/2020-12/schema
+                                    title: Type de chauffe bain
+                                    type: string
+                                    oneOf:
+                                      - &ref_40
+                                        const: FLUX_FORCE_HAUT_RENDEMENT
+                                        title: >-
+                                          Chauffe bain à flux forcé à haut
+                                          rendement
+                                      - &ref_41
+                                        const: COMBUSTION_HAUT_RENDEMENT
+                                        title: >-
+                                          Chauffe bain à combustion atmosphérique
+                                          à haut rendement
+                                      - &ref_42
+                                        const: CONDENSATION
+                                        title: Chauffe bain à condensation
+                                    $defs:
+                                      FLUX_FORCE_HAUT_RENDEMENT: *ref_40
+                                      COMBUSTION_HAUT_RENDEMENT: *ref_41
+                                      CONDENSATION: *ref_42
+                                      maison:
+                                        title: Type de chauffe bain
+                                        type: string
+                                        oneOf:
+                                          - const: FLUX_FORCE_HAUT_RENDEMENT
+                                            title: >-
+                                              Chauffe bain à flux forcé à haut
+                                              rendement
+                                          - const: CONDENSATION
+                                            title: Chauffe bain à condensation
+                                      appartement:
+                                        title: Type de chauffe bain
+                                        type: string
+                                        oneOf:
+                                          - const: FLUX_FORCE_HAUT_RENDEMENT
+                                            title: >-
+                                              Chauffe bain à flux forcé à haut
+                                              rendement
+                                          - const: COMBUSTION_HAUT_RENDEMENT
+                                            title: >-
+                                              Chauffe bain à combustion atmosphérique
+                                              à haut rendement
+                                          - const: CONDENSATION
+                                            title: Chauffe bain à condensation
+                                required:
+                                  - surfaceHabitable
+                                  - typeEquipement
+                              else:
+                                properties:
+                                  typeEquipement: *ref_43
+                                required:
+                                  - typeEquipement
+                      required:
+                        - adresse
+                        - caracteristiques
+                      examples:
+                        - adresse: *ref_2
+                          caracteristiques:
+                            typeBatiment: MAISON
+                            ancienneteBatiment: EXISTANT
+                            surfaceHabitable: 100
+                            typeEquipement: FLUX_FORCE_HAUT_RENDEMENT
+                    - properties:
+                        fiche:
+                          const: BAR-TH-167v38-1
+                      required:
+                        - fiche
+                - &ref_105
+                  allOf:
+                    - $schema: https://json-schema.org/draft/2020-12/schema
+                      title: BAR-TH-168v40-1
+                      type: object
+                      properties:
+                        adresse: *ref_0
+                        caracteristiques:
+                          title: Caractéristiques
+                          type: object
+                          properties:
+                            typeBatiment: *ref_6
+                            ancienneteBatiment: *ref_1
+                            usage:
+                              titles: Usages couverts par le dispositif solaire
+                              $id: >-
+                                https://schemas.ceeconnect.fr/enums/bar/type_usage
+                              $schema: https://json-schema.org/draft/2020-12/schema
+                              title: Type d'usage
+                              type: string
+                              oneOf: *ref_44
+                              $defs: *ref_45
+                            surfaceCapteurs:
+                              title: Surface des capteurs solaires
+                              type: number
+                              minimum: 0
+                          required:
+                            - typeBatiment
+                            - ancienneteBatiment
+                            - usage
+                            - surfaceCapteurs
+                      required:
+                        - adresse
+                        - caracteristiques
+                      examples:
+                        - adresse: *ref_2
+                          caracteristiques:
+                            typeBatiment: MAISON
+                            ancienneteBatiment: EXISTANT
+                            usage: ECS
+                            surfaceCapteurs: 15
+                    - properties:
+                        fiche:
+                          const: BAR-TH-168v40-1
+                      required:
+                        - fiche
+                - &ref_106
+                  allOf:
+                    - $schema: https://json-schema.org/draft/2020-12/schema
+                      title: BAR-TH-169v46-1
+                      type: object
+                      properties:
+                        adresse: *ref_0
+                        caracteristiques:
+                          title: Caractéristiques
+                          type: object
+                          properties:
+                            typeBatiment: *ref_6
+                            ancienneteBatiment: *ref_1
+                            logements:
+                              title: >-
+                                Nombre d'appartements raccordés à la pompe à
+                                chaleur
+                              type: integer
+                              minimum: 0
+                            performanceEnergetique:
+                              title: Coefficient de performance énergétique
+                              type: number
+                              minimum: 2.8
+                            tauxCouverture:
+                              title: Taux de couverture (%)
+                              description: >-
+                                Taux de couverture des besoins d'eau chaude
+                                sanitaire par l'équipement installé, issu de la
+                                note de dimensionnement rédigé par le
+                                professionnel
+                              type: number
+                              minimum: 0
+                              maximum: 100
+                          required:
+                            - typeBatiment
+                            - ancienneteBatiment
+                            - logements
+                            - performanceEnergetique
+                            - tauxCouverture
+                      required:
+                        - adresse
+                        - caracteristiques
+                      examples:
+                        - adresse: *ref_2
+                          caracteristiques:
+                            typeBatiment: MAISON
+                            ancienneteBatiment: EXISTANT
+                            logements: 10
+                            performanceEnergetique: 3
+                            tauxCouverture: 80
+                    - properties:
+                        fiche:
+                          const: BAR-TH-169v46-1
+                      required:
+                        - fiche
+              $defs:
+                BAR-EN-101v39-4: *ref_46
+                BAR-EN-102v39-2: *ref_47
+                BAR-EN-103v39-5: *ref_48
+                BAR-EN-104v14-1: *ref_49
+                BAR-EN-105v39-3: *ref_50
+                BAR-EN-106v33-4: *ref_51
+                BAR-EN-107v20-3: *ref_52
+                BAR-EN-108v37-2: *ref_53
+                BAR-EN-109v24-1: *ref_54
+                BAR-EN-110v35-1: *ref_55
+                BAR-EQ-110v15-1: *ref_56
+                BAR-EQ-115v28-1: *ref_57
+                BAR-SE-104v19-1: *ref_58
+                BAR-SE-105v28-1: *ref_59
+                BAR-SE-106v32-1: *ref_60
+                BAR-SE-107v37-1: *ref_61
+                BAR-SE-108v48-1: *ref_62
+                BAR-TH-101v17-1: *ref_63
+                BAR-TH-102v17-1: *ref_64
+                BAR-TH-104v41-3: *ref_65
+                BAR-TH-106v23-2: *ref_66
+                BAR-TH-107-SEv14-1: *ref_67
+                BAR-TH-107v14-1: *ref_68
+                BAR-TH-110v16-1: *ref_69
+                BAR-TH-111v17-1: *ref_70
+                BAR-TH-112v46-3: *ref_71
+                BAR-TH-113v41-3: *ref_72
+                BAR-TH-116v17-1: *ref_73
+                BAR-TH-117v14-1: *ref_74
+                BAR-TH-118v14-1: *ref_75
+                BAR-TH-122v15-1: *ref_76
+                BAR-TH-123v17-1: *ref_77
+                BAR-TH-124v35-3: *ref_78
+                BAR-TH-125v40-4: *ref_79
+                BAR-TH-127v40-4: *ref_80
+                BAR-TH-129v27-3: *ref_81
+                BAR-TH-130v26-1: *ref_82
+                BAR-TH-135v35-2: *ref_83
+                BAR-TH-137v45-3: *ref_84
+                BAR-TH-139v23-2: *ref_85
+                BAR-TH-141v15-1: *ref_86
+                BAR-TH-143v25-1: *ref_87
+                BAR-TH-143v51-5: *ref_88
+                BAR-TH-145v36-3: *ref_89
+                BAR-TH-148v15-2: *ref_90
+                BAR-TH-150v14-1: *ref_91
+                BAR-TH-155v40-4: *ref_92
+                BAR-TH-158v35-2: *ref_93
+                BAR-TH-159v44-3: *ref_94
+                BAR-TH-159v50-4: *ref_95
+                BAR-TH-160v39-2: *ref_96
+                BAR-TH-160v50-3: *ref_97
+                BAR-TH-161v28-1: *ref_98
+                BAR-TH-162v28-1: *ref_99
+                BAR-TH-163v38-2: *ref_100
+                BAR-TH-164v36-2: *ref_101
+                BAR-TH-165v34-1: *ref_102
+                BAR-TH-166v38-1: *ref_103
+                BAR-TH-167v38-1: *ref_104
+                BAR-TH-168v40-1: *ref_105
+                BAR-TH-169v46-1: *ref_106
+        required: true
+      responses:
+        '200':
+          description: Retourne le résultat de la simulation
+          content:
+            application/json:
+              schema:
+                $schema: https://json-schema.org/draft/2020-12/schema
+                title: Simulation CEE
+                description: >-
+                  Simulation de l'éligibilité et du volume CEE d'une opération
+                  standardisée d'économies d'énergie
+                type: object
+                properties:
+                  date:
+                    title: Date de la simulation
+                    type: string
+                    format: date
+                  volumeCeeClassique:
+                    title: Volume de CEE classique
+                    type: integer
+                    minimum: 0
+                  volumeCeePrecarite:
+                    title: Volume de CEE précarité
+                    type: integer
+                    minimum: 0
+                  fiche:
+                    title: Fiche d'opération standardisée
+                    type: object
+                    properties:
+                      id:
+                        $id: https://schemas.ceeconnect.fr/formats/reference_fiche
+                        $schema: https://json-schema.org/draft/2020-12/schema
+                        title: Référence interne
+                        type: string
+                        pattern: >-
+                          (AGRI|BAR|BAT|IND|RES|TRA)-(BA|CH|EC|EN|EQ|SE|TH|UT)-[0-9]+(-SE)?v[0-9]+[-][0-9]+
+                        examples:
+                          - BAR-EN-101v39-4
+                          - BAR-EN-102v39-2
+                          - BAR-EN-103v39-5
+                      code:
+                        $id: https://schemas.ceeconnect.fr/formats/code_fiche
+                        $schema: https://json-schema.org/draft/2020-12/schema
+                        title: Code
+                        type: string
+                        pattern: >-
+                          (AGRI|BAR|BAT|IND|RES|TRA)[-](BA|CH|EC|EN|EQ|SE|TH|UT)[-][0-9]*([-]SE)?
+                        examples:
+                          - AGRI-EQ-101
+                          - BAT-EN-101
+                          - BAR-EN-101
+                          - IND-BA-110
+                          - RES-CH-101
+                          - TRA-EQ-101
+                      nom:
+                        type: string
+                      eligibilite:
+                        type: boolean
+                      volumeCeeClassique:
+                        type: integer
+                        minimum: 0
+                      volumeCeePrecarite:
+                        type: integer
+                        minimum: 0
+                    required:
+                      - id
+                      - code
+                      - nom
+                      - eligibilite
+                      - volumeCeeClassique
+                      - volumeCeePrecarite
+                  bonification:
+                    title: Bonification
+                    type:
+                      - object
+                      - 'null'
+                    properties:
+                      id:
+                        $id: >-
+                          https://schemas.ceeconnect.fr/formats/reference_bonification
+                        $schema: https://json-schema.org/draft/2020-12/schema
+                        title: Référence interne
+                        type: string
+                        pattern: >-
+                          (ZNI|GPE-ZNI|ETS|CPE|GPE|CFT|CRC|CRM|CTH|CDP|CDC)([-][0-9]+)?v[0-9]*([-][0-9]*)?
+                        examples:
+                          - CRMv31-1
+                          - CDP-1v20-1
+                          - ZNIv35-1
+                      code:
+                        $id: https://schemas.ceeconnect.fr/enums/code-bonification
+                        $schema: https://json-schema.org/draft/2020-12/schema
+                        title: Code
+                        type: string
+                        oneOf:
+                          - &ref_107
+                            const: ZNI
+                            title: >-
+                              Zones non interconnectées au réseau métropolitain
+                              continental de transport d'électricité
+                          - &ref_108
+                            const: CPE
+                            title: Contrat de performance énergétique
+                          - &ref_109
+                            const: CFT
+                            title: >-
+                              Coup de pouce Chauffage des bâtiments résidentiels
+                              collectifs et tertiaires
+                          - &ref_110
+                            const: CRC
+                            title: >-
+                              Coup de pouce Rénovation performante de bâtiment
+                              résidentiel collectif
+                          - &ref_111
+                            const: CRM
+                            title: >-
+                              Coup de pouce Rénovation performante d'une maison
+                              individuelle
+                          - &ref_112
+                            const: CDP
+                            title: Coup de pouce Chauffage
+                        $defs:
+                          ZNI: *ref_107
+                          CPE: *ref_108
+                          CFT: *ref_109
+                          CRC: *ref_110
+                          CRM: *ref_111
+                          CDP: *ref_112
+                          CDC:
+                            const: CDC
+                            title: Coup de pouce Covoiturage
+                        examples:
+                          - ZNI
+                          - CPE
+                          - CFT
+                          - CRC
+                          - CRM
+                          - CDP
+                      nom:
+                        type: string
+                      eligibilite:
+                        type: boolean
+                      volumeCeeClassique:
+                        type: integer
+                        minimum: 0
+                      volumeCeePrecarite:
+                        type: integer
+                        minimum: 0
+                    required:
+                      - id
+                      - code
+                      - nom
+                      - eligibilite
+                      - volumeCeeClassique
+                      - volumeCeePrecarite
+                required:
+                  - date
+                  - volumeCeeClassique
+                  - volumeCeePrecarite
+                  - fiche
+                  - bonification
+        '400':
+          description: Liste des erreurs rencontrées

@@ -1,0 +1,236 @@
+openapi: 3.1.0
+info:
+  title: Archivage
+  description: API pour l'archivage des pièces justificatives et documents CEE
+  version: 1.0.0
+tags:
+  - name: Archive
+paths:
+  /archives:
+    get:
+      summary: Recherche une liste d'archives
+      operationId: getArchivesBy
+      tags:
+        - Archive
+      parameters:
+        - name: itemsPerPage
+          in: query
+          schema:
+            type: integer
+            minimum: 10
+            maximum: 100
+            default: 25
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: tags
+          in: query
+          description: Liste de tags
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: Liste des archives trouvées
+          headers:
+            X-Pagination-TotalItems:
+              description: Nombre total d'éléments retournés
+              schema:
+                type: integer
+                minimum: 0
+            X-Pagination-Page-Last:
+              description: Dernière page
+              schema:
+                type: string
+                format: url
+            X-Pagination-Page-Current:
+              description: Page courante
+              schema:
+                type: string
+                format: url
+            X-Pagination-Page-Next:
+              description: Page suivante
+              schema:
+                type: string
+                format: url
+          content:
+            application/json:
+              schema:
+                type: array
+                items: &ref_0
+                  $schema: https://json-schema.org/draft/2020-12/schema
+                  title: Archive
+                  description: Document archivé
+                  type: object
+                  properties:
+                    uuid:
+                      title: Identifiant
+                      type: string
+                      format: uuid
+                    dateCreation:
+                      title: Date de création
+                      type: string
+                      format: date
+                    dateModification:
+                      title: Date de dernière modification
+                      type: string
+                      format: date
+                    nom:
+                      title: Nom de l'archive
+                      type: string
+                    tags:
+                      title: Tags
+                      type: array
+                      items:
+                        title: Tag
+                        type: string
+                  required:
+                    - uuid
+                    - dateCreation
+                    - dateModification
+                    - nom
+                    - tags
+    post:
+      summary: Création d'une archive
+      opeartionId: createArchive
+      tags:
+        - Archive
+      requestBody:
+        content:
+          application/json:
+            schema: &ref_3
+              $schema: https://json-schema.org/draft/2020-12/schema
+              title: Modification d'une archive
+              type: object
+              properties:
+                nom:
+                  title: Nom de l'archive
+                  type: string
+                tags:
+                  title: Tags
+                  type: array
+                  items:
+                    title: Tag
+                    type: string
+                file:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    content:
+                      type: string
+                      contentEncoding: base64
+                  required:
+                    - name
+                    - content
+              required:
+                - nom
+                - tags
+                - file
+      responses:
+        '201':
+          description: Archive créée
+          content:
+            application/json:
+              schema: *ref_0
+  /archives/{uuid}:
+    parameters:
+      - &ref_2
+        name: uuid
+        in: path
+        description: UUID de l'archive
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      summary: Recherche d'une archive par son identifiant
+      operationId: getArchiveByUuid
+      tags:
+        - Archive
+      responses:
+        '200':
+          description: Archive retournée
+          content:
+            application/json:
+              schema: *ref_0
+        '404': &ref_1
+          description: Ressource non trouvée
+    patch:
+      summary: Modifie une archive
+      operationId: updateArchive
+      tags:
+        - Archive
+      requestBody:
+        content:
+          application/json:
+            schema: &ref_4
+              $schema: https://json-schema.org/draft/2020-12/schema
+              title: Modification d'une archive
+              type: object
+              properties:
+                nom:
+                  title: Nom de l'archive
+                  type: string
+                tags:
+                  title: Tags
+                  type: array
+                  items:
+                    title: Tag
+                    type: string
+                file:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    content:
+                      type: string
+                      contentEncoding: base64
+      responses:
+        '200':
+          description: Archive modifiée
+          content:
+            application/json:
+              schema: *ref_0
+        '400':
+          description: Liste des erreurs rencontrées
+        '404': *ref_1
+    delete:
+      summary: Supprimer une archive
+      operationId: removeArchive
+      tags:
+        - Archive
+      responses:
+        '204':
+          description: Requête exécutée avec succès sans retourner de contenu
+        '401':
+          description: Requête non authorisée
+        '404': *ref_1
+  /archives/{uuid}/telechargement:
+    parameters:
+      - *ref_2
+    get:
+      summary: Téléchargement du fichier
+      tags:
+        - Archive
+      responses:
+        '200':
+          description: Contenu du fichier
+          content:
+            application/json:
+              schema: &ref_5
+                type: string
+                contentEncoding: base64
+        '404': *ref_1
+components:
+  parameters:
+    uuid: *ref_2
+  schemas:
+    read: *ref_0
+    create: *ref_3
+    update: *ref_4
+    download: *ref_5
