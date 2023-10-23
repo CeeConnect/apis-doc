@@ -1,14 +1,12 @@
 openapi: 3.1.0
 info:
   title: Répertoire
-  description: >-
-    API d'accès au répertoire national des opérations standardisées d'économies
-    d'énergie
+  description: API d'accès au répertoire national des opérations standardisées
+    d'économies d'énergie
   version: 1.0.0
 tags:
   - name: Fiche
   - name: Bonification
-  - name: Bonus
 paths:
   /fiches:
     get:
@@ -19,13 +17,11 @@ paths:
       parameters:
         - name: code
           in: query
-          schema: &ref_46
-            $id: https://schemas.ceeconnect.fr/formats/code_fiche
+          schema: &a45
             $schema: https://json-schema.org/draft/2020-12/schema
             title: Code
             type: string
-            pattern: >-
-              (AGRI|BAR|BAT|IND|RES|TRA)[-](BA|CH|EC|EN|EQ|SE|TH|UT)[-][0-9]*([-]SE)?
+            pattern: (AGRI|BAR|BAT|IND|RES|TRA)[-](BA|CH|EC|EN|EQ|SE|TH|UT)[-][0-9]*([-]SE)?
             examples:
               - AGRI-EQ-101
               - BAT-EN-101
@@ -35,37 +31,36 @@ paths:
               - TRA-EQ-101
         - name: secteur
           in: query
-          schema: &ref_44
-            $id: https://schemas.ceeconnect.fr/enums/secteur-application
+          schema: &a43
             $schema: https://json-schema.org/draft/2020-12/schema
             title: Secteur d'application
             type: string
             oneOf:
-              - &ref_0
+              - &a1
                 const: AGRI
                 title: Agriculture
-              - &ref_1
+              - &a2
                 const: BAR
                 title: Bâtiment résidentiel
-              - &ref_2
+              - &a3
                 const: BAT
                 title: Bâtiment tertiaire
-              - &ref_3
+              - &a4
                 const: IND
                 title: Industrie
-              - &ref_4
+              - &a5
                 const: RES
                 title: Réseaux
-              - &ref_5
+              - &a6
                 const: TRA
                 title: Transport
             $defs:
-              AGRI: *ref_0
-              BAR: *ref_1
-              BAT: *ref_2
-              IND: *ref_3
-              RES: *ref_4
-              TRA: *ref_5
+              AGRI: *a1
+              BAR: *a2
+              BAT: *a3
+              IND: *a4
+              RES: *a5
+              TRA: *a6
             examples:
               - AGRI
               - BAR
@@ -75,45 +70,44 @@ paths:
               - TRA
         - name: sousSecteur
           in: query
-          schema: &ref_45
-            $id: https://schemas.ceeconnect.fr/enums/sous-secteur-application
+          schema: &a44
             $schema: https://json-schema.org/draft/2020-12/schema
             title: Sous-secteur d'application
             type: string
             oneOf:
-              - &ref_6
+              - &a7
                 const: BA
                 title: Bâtiments
-              - &ref_7
+              - &a8
                 const: CH
                 title: Chaleur et Froid
-              - &ref_8
+              - &a9
                 const: EC
                 title: Eclairage
-              - &ref_9
+              - &a10
                 const: EN
                 title: Enveloppe
-              - &ref_10
+              - &a11
                 const: EQ
                 title: Equipement
-              - &ref_11
+              - &a12
                 const: SE
                 title: Services
-              - &ref_12
+              - &a13
                 const: TH
                 title: Thermique
-              - &ref_13
+              - &a14
                 const: UT
                 title: Utilités
             $defs:
-              BA: *ref_6
-              CH: *ref_7
-              EC: *ref_8
-              EN: *ref_9
-              EQ: *ref_10
-              SE: *ref_11
-              TH: *ref_12
-              UT: *ref_13
+              BA: *a7
+              CH: *a8
+              EC: *a9
+              EN: *a10
+              EQ: *a11
+              SE: *a12
+              TH: *a13
+              UT: *a14
             examples:
               - BA
               - CH
@@ -140,63 +134,149 @@ paths:
           schema:
             type: boolean
       responses:
-        '200':
+        "200":
           description: Fiches d'opération standardisée retournées
           content:
             application/json:
               schema:
                 type: array
-                items: &ref_28
+                items: &a29
                   title: Fiche d'opération standardisée
                   type: object
                   properties:
                     id:
-                      $id: https://schemas.ceeconnect.fr/formats/reference_fiche
-                      $schema: https://json-schema.org/draft/2020-12/schema
-                      title: Référence interne
+                      title: Fiche d'opération standardisée
                       type: string
-                      pattern: >-
-                        (AGRI|BAR|BAT|IND|RES|TRA)-(BA|CH|EC|EN|EQ|SE|TH|UT)-[0-9]+(-SE)?v[0-9]+[-][0-9]+
-                      examples:
-                        - BAR-EN-101v39-4
-                        - BAR-EN-102v39-2
-                        - BAR-EN-103v39-5
+                      oneOf:
+                        - const: BAR-EN-101v39-4
+                        - const: BAR-EN-101v54-5
+                        - const: BAR-EN-102v39-2
+                        - const: BAR-EN-103v39-5
+                        - const: BAR-EN-104v14-1
+                        - const: BAR-EN-104v54-2
+                        - const: BAR-EN-105v39-3
+                        - const: BAR-EN-106v33-4
+                        - const: BAR-EN-107v20-3
+                        - const: BAR-EN-108v37-2
+                        - const: BAR-EN-108v54-3
+                        - const: BAR-EN-109v24-1
+                        - const: BAR-EN-110v35-1
+                        - const: BAR-EQ-110v15-1
+                        - const: BAR-EQ-115v28-1
+                        - const: BAR-SE-104v19-1
+                        - const: BAR-SE-105v28-1
+                        - const: BAR-SE-106v32-1
+                        - const: BAR-SE-107v37-1
+                        - const: BAR-SE-108v48-1
+                        - const: BAR-SE-109v54-1
+                        - const: BAR-TH-101v17-1
+                        - const: BAR-TH-102v17-1
+                        - const: BAR-TH-104v41-3
+                        - const: BAR-TH-106v23-2
+                        - const: BAR-TH-107-SEv14-1
+                        - const: BAR-TH-107v14-1
+                        - const: BAR-TH-110v16-1
+                        - const: BAR-TH-111v17-1
+                        - const: BAR-TH-112v46-3
+                        - const: BAR-TH-113v41-3
+                        - const: BAR-TH-116v17-1
+                        - const: BAR-TH-117v14-1
+                        - const: BAR-TH-118v14-1
+                        - const: BAR-TH-122v15-1
+                        - const: BAR-TH-123v17-1
+                        - const: BAR-TH-123v54-2
+                        - const: BAR-TH-124v35-3
+                        - const: BAR-TH-125v40-4
+                        - const: BAR-TH-125v54-5
+                        - const: BAR-TH-127v40-4
+                        - const: BAR-TH-127v54-5
+                        - const: BAR-TH-129v27-3
+                        - const: BAR-TH-130v26-1
+                        - const: BAR-TH-130v54-2
+                        - const: BAR-TH-135v35-2
+                        - const: BAR-TH-137v45-3
+                        - const: BAR-TH-139v23-2
+                        - const: BAR-TH-141v15-1
+                        - const: BAR-TH-143v25-1
+                        - const: BAR-TH-143v51-5
+                        - const: BAR-TH-145v36-3
+                        - const: BAR-TH-145v52-4
+                        - const: BAR-TH-148v15-2
+                        - const: BAR-TH-150v14-1
+                        - const: BAR-TH-155v40-4
+                        - const: BAR-TH-158v35-2
+                        - const: BAR-TH-159v44-3
+                        - const: BAR-TH-159v50-4
+                        - const: BAR-TH-160v39-2
+                        - const: BAR-TH-160v50-3
+                        - const: BAR-TH-160v54-4
+                        - const: BAR-TH-161v28-1
+                        - const: BAR-TH-161v54-2
+                        - const: BAR-TH-162v28-1
+                        - const: BAR-TH-163v38-2
+                        - const: BAR-TH-164v36-2
+                        - const: BAR-TH-164v52-3
+                        - const: BAR-TH-165v34-1
+                        - const: BAR-TH-166v38-1
+                        - const: BAR-TH-167v38-1
+                        - const: BAR-TH-168v40-1
+                        - const: BAR-TH-169v46-1
+                        - const: BAR-TH-170v54-1
+                        - const: BAR-TH-171v55-1
+                        - const: BAR-TH-172v55-1
+                      $defs:
+                        agri:
+                          type: string
+                          pattern: (AGRI)[-](BA|CH|EC|EN|EQ|SE|TH|UT)[-][0-9]+([-]SE)?v[0-9]+[-][0-9]+
+                        bar:
+                          type: string
+                          pattern: (BAR)[-](BA|CH|EC|EN|EQ|SE|TH|UT)[-][0-9]+([-]SE)?v[0-9]+[-][0-9]+
+                        bat:
+                          type: string
+                          pattern: (BAT)[-](BA|CH|EC|EN|EQ|SE|TH|UT)[-][0-9]+([-]SE)?v[0-9]+[-][0-9]+
+                        ind:
+                          type: string
+                          pattern: (IND)[-](BA|CH|EC|EN|EQ|SE|TH|UT)[-][0-9]+([-]SE)?v[0-9]+[-][0-9]+
+                        res:
+                          type: string
+                          pattern: (RES)[-](BA|CH|EC|EN|EQ|SE|TH|UT)[-][0-9]+([-]SE)?v[0-9]+[-][0-9]+
+                        tra:
+                          type: string
+                          pattern: (TRA)[-](BA|CH|EC|EN|EQ|SE|TH|UT)[-][0-9]+([-]SE)?v[0-9]+[-][0-9]+
                     secteur:
                       title: Secteur d'application
                       type: object
                       properties:
                         code:
-                          $id: >-
-                            https://schemas.ceeconnect.fr/enums/secteur-application
                           $schema: https://json-schema.org/draft/2020-12/schema
                           title: Secteur d'application
                           type: string
                           oneOf:
-                            - &ref_14
+                            - &a15
                               const: AGRI
                               title: Agriculture
-                            - &ref_15
+                            - &a16
                               const: BAR
                               title: Bâtiment résidentiel
-                            - &ref_16
+                            - &a17
                               const: BAT
                               title: Bâtiment tertiaire
-                            - &ref_17
+                            - &a18
                               const: IND
                               title: Industrie
-                            - &ref_18
+                            - &a19
                               const: RES
                               title: Réseaux
-                            - &ref_19
+                            - &a20
                               const: TRA
                               title: Transport
                           $defs:
-                            AGRI: *ref_14
-                            BAR: *ref_15
-                            BAT: *ref_16
-                            IND: *ref_17
-                            RES: *ref_18
-                            TRA: *ref_19
+                            AGRI: *a15
+                            BAR: *a16
+                            BAT: *a17
+                            IND: *a18
+                            RES: *a19
+                            TRA: *a20
                           examples:
                             - AGRI
                             - BAR
@@ -215,45 +295,43 @@ paths:
                       type: object
                       properties:
                         code:
-                          $id: >-
-                            https://schemas.ceeconnect.fr/enums/sous-secteur-application
                           $schema: https://json-schema.org/draft/2020-12/schema
                           title: Sous-secteur d'application
                           type: string
                           oneOf:
-                            - &ref_20
+                            - &a21
                               const: BA
                               title: Bâtiments
-                            - &ref_21
+                            - &a22
                               const: CH
                               title: Chaleur et Froid
-                            - &ref_22
+                            - &a23
                               const: EC
                               title: Eclairage
-                            - &ref_23
+                            - &a24
                               const: EN
                               title: Enveloppe
-                            - &ref_24
+                            - &a25
                               const: EQ
                               title: Equipement
-                            - &ref_25
+                            - &a26
                               const: SE
                               title: Services
-                            - &ref_26
+                            - &a27
                               const: TH
                               title: Thermique
-                            - &ref_27
+                            - &a28
                               const: UT
                               title: Utilités
                           $defs:
-                            BA: *ref_20
-                            CH: *ref_21
-                            EC: *ref_22
-                            EN: *ref_23
-                            EQ: *ref_24
-                            SE: *ref_25
-                            TH: *ref_26
-                            UT: *ref_27
+                            BA: *a21
+                            CH: *a22
+                            EC: *a23
+                            EN: *a24
+                            EQ: *a25
+                            SE: *a26
+                            TH: *a27
+                            UT: *a28
                           examples:
                             - BA
                             - CH
@@ -270,12 +348,10 @@ paths:
                         - code
                         - nom
                     code:
-                      $id: https://schemas.ceeconnect.fr/formats/code_fiche
                       $schema: https://json-schema.org/draft/2020-12/schema
                       title: Code
                       type: string
-                      pattern: >-
-                        (AGRI|BAR|BAT|IND|RES|TRA)[-](BA|CH|EC|EN|EQ|SE|TH|UT)[-][0-9]*([-]SE)?
+                      pattern: (AGRI|BAR|BAT|IND|RES|TRA)[-](BA|CH|EC|EN|EQ|SE|TH|UT)[-][0-9]*([-]SE)?
                       examples:
                         - AGRI-EQ-101
                         - BAT-EN-101
@@ -287,8 +363,8 @@ paths:
                       type: string
                       pattern: ^[0-9]+[.][0-9]+$
                       examples:
-                        - '14.1'
-                        - '33.4'
+                        - "14.1"
+                        - "33.4"
                     nom:
                       type: string
                     dateDebut:
@@ -297,7 +373,7 @@ paths:
                     dateFin:
                       type:
                         - string
-                        - 'null'
+                        - "null"
                       format: date
                     metropole:
                       type: boolean
@@ -323,24 +399,112 @@ paths:
       parameters:
         - name: id
           in: path
-          schema: &ref_47
-            $id: https://schemas.ceeconnect.fr/formats/reference_fiche
-            $schema: https://json-schema.org/draft/2020-12/schema
-            title: Référence interne
+          schema: &a47
+            title: Fiche d'opération standardisée
             type: string
-            pattern: >-
-              (AGRI|BAR|BAT|IND|RES|TRA)-(BA|CH|EC|EN|EQ|SE|TH|UT)-[0-9]+(-SE)?v[0-9]+[-][0-9]+
-            examples:
-              - BAR-EN-101v39-4
-              - BAR-EN-102v39-2
-              - BAR-EN-103v39-5
+            oneOf:
+              - const: BAR-EN-101v39-4
+              - const: BAR-EN-101v54-5
+              - const: BAR-EN-102v39-2
+              - const: BAR-EN-103v39-5
+              - const: BAR-EN-104v14-1
+              - const: BAR-EN-104v54-2
+              - const: BAR-EN-105v39-3
+              - const: BAR-EN-106v33-4
+              - const: BAR-EN-107v20-3
+              - const: BAR-EN-108v37-2
+              - const: BAR-EN-108v54-3
+              - const: BAR-EN-109v24-1
+              - const: BAR-EN-110v35-1
+              - const: BAR-EQ-110v15-1
+              - const: BAR-EQ-115v28-1
+              - const: BAR-SE-104v19-1
+              - const: BAR-SE-105v28-1
+              - const: BAR-SE-106v32-1
+              - const: BAR-SE-107v37-1
+              - const: BAR-SE-108v48-1
+              - const: BAR-SE-109v54-1
+              - const: BAR-TH-101v17-1
+              - const: BAR-TH-102v17-1
+              - const: BAR-TH-104v41-3
+              - const: BAR-TH-106v23-2
+              - const: BAR-TH-107-SEv14-1
+              - const: BAR-TH-107v14-1
+              - const: BAR-TH-110v16-1
+              - const: BAR-TH-111v17-1
+              - const: BAR-TH-112v46-3
+              - const: BAR-TH-113v41-3
+              - const: BAR-TH-116v17-1
+              - const: BAR-TH-117v14-1
+              - const: BAR-TH-118v14-1
+              - const: BAR-TH-122v15-1
+              - const: BAR-TH-123v17-1
+              - const: BAR-TH-123v54-2
+              - const: BAR-TH-124v35-3
+              - const: BAR-TH-125v40-4
+              - const: BAR-TH-125v54-5
+              - const: BAR-TH-127v40-4
+              - const: BAR-TH-127v54-5
+              - const: BAR-TH-129v27-3
+              - const: BAR-TH-130v26-1
+              - const: BAR-TH-130v54-2
+              - const: BAR-TH-135v35-2
+              - const: BAR-TH-137v45-3
+              - const: BAR-TH-139v23-2
+              - const: BAR-TH-141v15-1
+              - const: BAR-TH-143v25-1
+              - const: BAR-TH-143v51-5
+              - const: BAR-TH-145v36-3
+              - const: BAR-TH-145v52-4
+              - const: BAR-TH-148v15-2
+              - const: BAR-TH-150v14-1
+              - const: BAR-TH-155v40-4
+              - const: BAR-TH-158v35-2
+              - const: BAR-TH-159v44-3
+              - const: BAR-TH-159v50-4
+              - const: BAR-TH-160v39-2
+              - const: BAR-TH-160v50-3
+              - const: BAR-TH-160v54-4
+              - const: BAR-TH-161v28-1
+              - const: BAR-TH-161v54-2
+              - const: BAR-TH-162v28-1
+              - const: BAR-TH-163v38-2
+              - const: BAR-TH-164v36-2
+              - const: BAR-TH-164v52-3
+              - const: BAR-TH-165v34-1
+              - const: BAR-TH-166v38-1
+              - const: BAR-TH-167v38-1
+              - const: BAR-TH-168v40-1
+              - const: BAR-TH-169v46-1
+              - const: BAR-TH-170v54-1
+              - const: BAR-TH-171v55-1
+              - const: BAR-TH-172v55-1
+            $defs:
+              agri:
+                type: string
+                pattern: (AGRI)[-](BA|CH|EC|EN|EQ|SE|TH|UT)[-][0-9]+([-]SE)?v[0-9]+[-][0-9]+
+              bar:
+                type: string
+                pattern: (BAR)[-](BA|CH|EC|EN|EQ|SE|TH|UT)[-][0-9]+([-]SE)?v[0-9]+[-][0-9]+
+              bat:
+                type: string
+                pattern: (BAT)[-](BA|CH|EC|EN|EQ|SE|TH|UT)[-][0-9]+([-]SE)?v[0-9]+[-][0-9]+
+              ind:
+                type: string
+                pattern: (IND)[-](BA|CH|EC|EN|EQ|SE|TH|UT)[-][0-9]+([-]SE)?v[0-9]+[-][0-9]+
+              res:
+                type: string
+                pattern: (RES)[-](BA|CH|EC|EN|EQ|SE|TH|UT)[-][0-9]+([-]SE)?v[0-9]+[-][0-9]+
+              tra:
+                type: string
+                pattern: (TRA)[-](BA|CH|EC|EN|EQ|SE|TH|UT)[-][0-9]+([-]SE)?v[0-9]+[-][0-9]+
       responses:
-        '200':
+        "200":
           description: Fiche d'opération standardisée retournée
           content:
             application/json:
-              schema: *ref_28
-        '404':
+              schema: *a29
+        "404":
           description: Fiche d'opération standardisée non trouvée
   /bonifications:
     get:
@@ -351,43 +515,38 @@ paths:
       parameters:
         - name: code
           in: query
-          schema: &ref_42
-            $id: https://schemas.ceeconnect.fr/enums/code-bonification
+          schema: &a46
             $schema: https://json-schema.org/draft/2020-12/schema
             title: Code
             type: string
             oneOf:
-              - &ref_29
+              - &a30
                 const: ZNI
-                title: >-
-                  Zones non interconnectées au réseau métropolitain continental
-                  de transport d'électricité
-              - &ref_30
+                title: Zones non interconnectées au réseau métropolitain continental de
+                  transport d'électricité
+              - &a31
                 const: CPE
                 title: Contrat de performance énergétique
-              - &ref_31
+              - &a32
                 const: CFT
-                title: >-
-                  Coup de pouce Chauffage des bâtiments résidentiels collectifs
-                  et tertiaires
-              - &ref_32
+                title: Coup de pouce Chauffage des bâtiments résidentiels collectifs et
+                  tertiaires
+              - &a33
                 const: CRC
-                title: >-
-                  Coup de pouce Rénovation performante de bâtiment résidentiel
-                  collectif
-              - &ref_33
+                title: Coup de pouce Rénovation performante de bâtiment résidentiel collectif
+              - &a34
                 const: CRM
                 title: Coup de pouce Rénovation performante d'une maison individuelle
-              - &ref_34
+              - &a35
                 const: CDP
                 title: Coup de pouce Chauffage
             $defs:
-              ZNI: *ref_29
-              CPE: *ref_30
-              CFT: *ref_31
-              CRC: *ref_32
-              CRM: *ref_33
-              CDP: *ref_34
+              ZNI: *a30
+              CPE: *a31
+              CFT: *a32
+              CRC: *a33
+              CRM: *a34
+              CDP: *a35
               CDC:
                 const: CDC
                 title: Coup de pouce Covoiturage
@@ -405,70 +564,80 @@ paths:
             type: string
             format: date
       responses:
-        '200':
+        "200":
           description: Bonifications retournées
           content:
             application/json:
               schema:
                 type: array
-                items: &ref_41
+                items: &a42
                   title: Bonification
-                  description: >-
-                    Bonification applicable aux opérations standardisées
-                    d'économies d'énergie
+                  description: Bonification applicable aux opérations standardisées d'économies
+                    d'énergie
                   type: object
                   properties:
                     id:
-                      $id: >-
-                        https://schemas.ceeconnect.fr/formats/reference_bonification
-                      $schema: https://json-schema.org/draft/2020-12/schema
-                      title: Référence interne
+                      title: Bonification
                       type: string
-                      pattern: >-
-                        (ZNI|GPE-ZNI|ETS|CPE|GPE|CFT|CRC|CRM|CTH|CDP|CDC)([-][0-9]+)?v[0-9]*([-][0-9]*)?
-                      examples:
-                        - CRMv31-1
-                        - CDP-1v20-1
-                        - ZNIv35-1
+                      oneOf:
+                        - const: CDPv50-1
+                        - const: CDPv52-1
+                        - const: CFTv50-1
+                        - const: CPEv40-1
+                        - const: CRCv51-1
+                        - const: CRMv51-1
+                        - const: ZNIv35-1
+                      $defs:
+                        CDP:
+                          type: string
+                          pattern: ^CDPv[0-9]{2}[-][0-9]+$
+                        CFT:
+                          type: string
+                          pattern: ^CFTv[0-9]{2}[-][0-9]+$
+                        CPE:
+                          type: string
+                          pattern: ^CPEv[0-9]{2}[-][0-9]+$
+                        CRC:
+                          type: string
+                          pattern: ^CRCv[0-9]{2}[-][0-9]+$
+                        CRM:
+                          type: string
+                          pattern: ^CRMv[0-9]{2}[-][0-9]+$
+                        ZNI:
+                          type: string
+                          pattern: ^ZNIv[0-9]{2}[-][0-9]+$
                     code:
-                      $id: https://schemas.ceeconnect.fr/enums/code-bonification
                       $schema: https://json-schema.org/draft/2020-12/schema
                       title: Code
                       type: string
                       oneOf:
-                        - &ref_35
+                        - &a36
                           const: ZNI
-                          title: >-
-                            Zones non interconnectées au réseau métropolitain
-                            continental de transport d'électricité
-                        - &ref_36
+                          title: Zones non interconnectées au réseau métropolitain continental de
+                            transport d'électricité
+                        - &a37
                           const: CPE
                           title: Contrat de performance énergétique
-                        - &ref_37
+                        - &a38
                           const: CFT
-                          title: >-
-                            Coup de pouce Chauffage des bâtiments résidentiels
-                            collectifs et tertiaires
-                        - &ref_38
+                          title: Coup de pouce Chauffage des bâtiments résidentiels collectifs et
+                            tertiaires
+                        - &a39
                           const: CRC
-                          title: >-
-                            Coup de pouce Rénovation performante de bâtiment
-                            résidentiel collectif
-                        - &ref_39
+                          title: Coup de pouce Rénovation performante de bâtiment résidentiel collectif
+                        - &a40
                           const: CRM
-                          title: >-
-                            Coup de pouce Rénovation performante d'une maison
-                            individuelle
-                        - &ref_40
+                          title: Coup de pouce Rénovation performante d'une maison individuelle
+                        - &a41
                           const: CDP
                           title: Coup de pouce Chauffage
                       $defs:
-                        ZNI: *ref_35
-                        CPE: *ref_36
-                        CFT: *ref_37
-                        CRC: *ref_38
-                        CRM: *ref_39
-                        CDP: *ref_40
+                        ZNI: *a36
+                        CPE: *a37
+                        CFT: *a38
+                        CRC: *a39
+                        CRM: *a40
+                        CDP: *a41
                         CDC:
                           const: CDC
                           title: Coup de pouce Covoiturage
@@ -483,8 +652,8 @@ paths:
                       type: string
                       pattern: ^[0-9]+[.][0-9]+$
                       examples:
-                        - '14.1'
-                        - '33.4'
+                        - "14.1"
+                        - "33.4"
                     nom:
                       type: string
                     dateDebut:
@@ -493,7 +662,7 @@ paths:
                     dateFin:
                       type:
                         - string
-                        - 'null'
+                        - "null"
                       format: date
                   required:
                     - id
@@ -511,74 +680,52 @@ paths:
       parameters:
         - name: id
           in: path
-          schema: &ref_43
-            $id: https://schemas.ceeconnect.fr/formats/reference_bonification
-            $schema: https://json-schema.org/draft/2020-12/schema
-            title: Référence interne
+          schema:
             type: string
-            pattern: >-
-              (ZNI|GPE-ZNI|ETS|CPE|GPE|CFT|CRC|CRM|CTH|CDP|CDC)([-][0-9]+)?v[0-9]*([-][0-9]*)?
-            examples:
-              - CRMv31-1
-              - CDP-1v20-1
-              - ZNIv35-1
       responses:
-        '200':
+        "200":
           description: Bonification retournée
           content:
             application/json:
-              schema: *ref_41
-        '404':
+              schema: *a42
+        "404":
           description: Bonification non trouvée
-  /bonus:
-    get:
-      summary: Recherche une liste des bonus par attributs
-      operationId: getBonusBy
-      tags:
-        - Bonus
-      parameters:
-        - name: code
-          in: query
-          schema: *ref_42
-        - name: date
-          in: query
-          description: Date prévue de l'opération
-          schema:
-            type: string
-            format: date
-      responses:
-        '200':
-          description: Bonus retournés
-          content:
-            application/json:
-              schema:
-                type: array
-                items: *ref_41
-  /bonus/{id}:
-    get:
-      summary: Recherche un bonus par son identifiant unique
-      operationId: getBonusById
-      tags:
-        - Bonus
-      parameters:
-        - name: id
-          in: path
-          schema: *ref_43
-      responses:
-        '200':
-          description: Bonus retourné
-          content:
-            application/json:
-              schema: *ref_41
-        '404':
-          description: Bonus non trouvé
 components:
   schemas:
-    fiche: *ref_28
-    bonification: *ref_41
-    codeSecteur: *ref_44
-    codeSousSecteur: *ref_45
-    codeFiche: *ref_46
-    codeBonification: *ref_42
-    referenceFiche: *ref_47
-    referenceBonification: *ref_43
+    fiche: *a29
+    bonification: *a42
+    codeSecteur: *a43
+    codeSousSecteur: *a44
+    codeFiche: *a45
+    codeBonification: *a46
+    referenceFiche: *a47
+    referenceBonification:
+      title: Bonification
+      type: string
+      oneOf:
+        - const: CDPv50-1
+        - const: CDPv52-1
+        - const: CFTv50-1
+        - const: CPEv40-1
+        - const: CRCv51-1
+        - const: CRMv51-1
+        - const: ZNIv35-1
+      $defs:
+        CDP:
+          type: string
+          pattern: ^CDPv[0-9]{2}[-][0-9]+$
+        CFT:
+          type: string
+          pattern: ^CFTv[0-9]{2}[-][0-9]+$
+        CPE:
+          type: string
+          pattern: ^CPEv[0-9]{2}[-][0-9]+$
+        CRC:
+          type: string
+          pattern: ^CRCv[0-9]{2}[-][0-9]+$
+        CRM:
+          type: string
+          pattern: ^CRMv[0-9]{2}[-][0-9]+$
+        ZNI:
+          type: string
+          pattern: ^ZNIv[0-9]{2}[-][0-9]+$

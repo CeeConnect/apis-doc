@@ -26,15 +26,15 @@ paths:
             type: integer
             minimum: 1
             default: 1
-        - name: tags
+        - name: metadata
           in: query
-          description: Liste de tags
+          description: Liste des métadonnées
           schema:
             type: array
             items:
               type: string
       responses:
-        '200':
+        "200":
           description: Liste des archives trouvées
           headers:
             X-Pagination-TotalItems:
@@ -61,8 +61,7 @@ paths:
             application/json:
               schema:
                 type: array
-                items: &ref_0
-                  $schema: https://json-schema.org/draft/2020-12/schema
+                items: &a1
                   title: Archive
                   description: Document archivé
                   type: object
@@ -71,29 +70,20 @@ paths:
                       title: Identifiant
                       type: string
                       format: uuid
-                    dateCreation:
-                      title: Date de création
-                      type: string
-                      format: date
-                    dateModification:
-                      title: Date de dernière modification
-                      type: string
-                      format: date
-                    nom:
-                      title: Nom de l'archive
-                      type: string
-                    tags:
+                    metadata:
                       title: Tags
                       type: array
                       items:
                         title: Tag
                         type: string
+                    content:
+                      title: Document encodé au format base64
+                      type: string
+                      contentEncoding: base64
                   required:
                     - uuid
-                    - dateCreation
-                    - dateModification
-                    - nom
-                    - tags
+                    - metadata
+                    - content
     post:
       summary: Création d'une archive
       opeartionId: createArchive
@@ -101,136 +91,92 @@ paths:
         - Archive
       requestBody:
         content:
-          application/json:
-            schema: &ref_3
-              $schema: https://json-schema.org/draft/2020-12/schema
-              title: Modification d'une archive
+          multipart/form-data:
+            schema:
               type: object
               properties:
-                nom:
-                  title: Nom de l'archive
+                document:
                   type: string
-                tags:
-                  title: Tags
+                  format: binary
+                metadata:
                   type: array
                   items:
-                    title: Tag
                     type: string
-                file:
-                  type: object
-                  properties:
-                    name:
-                      type: string
-                    content:
-                      type: string
-                      contentEncoding: base64
-                  required:
-                    - name
-                    - content
               required:
-                - nom
-                - tags
-                - file
+                - document
+                - metadata
       responses:
-        '201':
+        "201":
           description: Archive créée
           content:
             application/json:
-              schema: *ref_0
+              schema: *a1
+        "422":
+          description: Requête invalide
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  title:
+                    type: string
+                  status:
+                    type: integer
+                    const: 422
+                  detail:
+                    type: string
+                  errors:
+                    type: array
+                    items:
+                      title: Erreur
+                      type: object
+                      properties:
+                        keyword:
+                          type: string
+                        propertyPath:
+                          type: string
+                        message:
+                          type: string
+        "503":
+          description: Service temporairement indisponible
   /archives/{uuid}:
-    parameters:
-      - &ref_2
-        name: uuid
-        in: path
-        description: UUID de l'archive
-        required: true
-        schema:
-          type: string
-          format: uuid
     get:
       summary: Recherche d'une archive par son identifiant
       operationId: getArchiveByUuid
       tags:
         - Archive
+      parameters:
+        - &a2
+          name: uuid
+          in: path
+          description: UUID de l'archive
+          required: true
+          schema:
+            type: string
+            format: uuid
       responses:
-        '200':
+        "200":
           description: Archive retournée
           content:
             application/json:
-              schema: *ref_0
-        '404': &ref_1
+              schema: *a1
+        "404": &a3
           description: Ressource non trouvée
-    patch:
-      summary: Modifie une archive
-      operationId: updateArchive
-      tags:
-        - Archive
-      requestBody:
-        content:
-          application/json:
-            schema: &ref_4
-              $schema: https://json-schema.org/draft/2020-12/schema
-              title: Modification d'une archive
-              type: object
-              properties:
-                nom:
-                  title: Nom de l'archive
-                  type: string
-                tags:
-                  title: Tags
-                  type: array
-                  items:
-                    title: Tag
-                    type: string
-                file:
-                  type: object
-                  properties:
-                    name:
-                      type: string
-                    content:
-                      type: string
-                      contentEncoding: base64
-      responses:
-        '200':
-          description: Archive modifiée
-          content:
-            application/json:
-              schema: *ref_0
-        '400':
-          description: Liste des erreurs rencontrées
-        '404': *ref_1
     delete:
       summary: Supprimer une archive
       operationId: removeArchive
       tags:
         - Archive
+      parameters:
+        - *a2
       responses:
-        '204':
+        "204":
           description: Requête exécutée avec succès sans retourner de contenu
-        '401':
-          description: Requête non authorisée
-        '404': *ref_1
-  /archives/{uuid}/telechargement:
-    parameters:
-      - *ref_2
-    get:
-      summary: Téléchargement du fichier
-      tags:
-        - Archive
-      responses:
-        '200':
-          description: Contenu du fichier
-          content:
-            application/json:
-              schema: &ref_5
-                type: string
-                contentEncoding: base64
-        '404': *ref_1
+        "404": *a3
 components:
   parameters:
-    uuid: *ref_2
+    uuid: *a2
   schemas:
-    read: *ref_0
-    create: *ref_3
-    update: *ref_4
-    download: *ref_5
+    archive: *a1
