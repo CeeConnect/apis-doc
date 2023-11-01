@@ -6,20 +6,26 @@ const ui = SwaggerUI({
 	dom_id: "#swagger-ui",
   urls: [
     {
-      "name": "archive",
-	    "url": "./schemas/archivage/openapi.yaml"
-    }, {
       "name": "coherence",
 	    "url": "./schemas/coherence/openapi.yaml"
     }, {
       "name": "depot",
 	    "url": "./schemas/depot/openapi.yaml"
     }, {
+      "name": "document",
+	    "url": "./schemas/document/openapi.yaml"
+    }, {
       "name": "instruction",
 	    "url": "./schemas/instruction/openapi.yaml"
     }, {
+      "name": "litige",
+	    "url": "./schemas/litige/openapi.yaml"
+    }, {
       "name": "repertoire",
 	    "url": "./schemas/repertoire/openapi.yaml"
+    }, {
+      "name": "schema",
+	    "url": "./schemas/schema/openapi.yaml"
     }, {
       "name": "simulation",
 	    "url": "./schemas/simulation/openapi.yaml"

@@ -63,27 +63,37 @@ paths:
                 type: array
                 items: &a1
                   title: Archive
-                  description: Document archivé
                   type: object
                   properties:
                     uuid:
-                      title: Identifiant
+                      title: Identifiant unique d'archive
                       type: string
                       format: uuid
                     metadata:
-                      title: Tags
+                      title: Métadonnées
                       type: array
                       items:
-                        title: Tag
-                        type: string
-                    content:
-                      title: Document encodé au format base64
+                        title: Métadonnées
+                        type: object
+                        properties:
+                          depot:
+                            type: string
+                            format: uuid
+                          controle:
+                            type: string
+                            format: uuid
+                          operation:
+                            type: string
+                            format: uuid
+                          code:
+                            type: string
+                    url:
+                      title: Lien permettant d'ouvrir le fichier
                       type: string
-                      contentEncoding: base64
                   required:
                     - uuid
                     - metadata
-                    - content
+                    - url
     post:
       summary: Création d'une archive
       opeartionId: createArchive
@@ -92,7 +102,8 @@ paths:
       requestBody:
         content:
           multipart/form-data:
-            schema:
+            schema: &a4
+              title: Archive
               type: object
               properties:
                 document:
@@ -101,7 +112,19 @@ paths:
                 metadata:
                   type: array
                   items:
-                    type: string
+                    type: object
+                    properties:
+                      depot:
+                        type: string
+                        format: uuid
+                      controle:
+                        type: string
+                        format: uuid
+                      operation:
+                        type: string
+                        format: uuid
+                      code:
+                        type: string
               required:
                 - document
                 - metadata
@@ -175,8 +198,29 @@ paths:
         "204":
           description: Requête exécutée avec succès sans retourner de contenu
         "404": *a3
+  /archives/{uuid}/content:
+    get:
+      summary: Recherche le contenu d'une archive par son identifiant
+      operationId: getArchiveContentByUuid
+      tags:
+        - Archive
+      parameters:
+        - *a2
+      responses:
+        "200":
+          description: Archive retournée
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: string
+                    format: binary
+                  - type: string
+                    format: base64
+        "404": *a3
 components:
   parameters:
     uuid: *a2
   schemas:
+    createArchive: *a4
     archive: *a1

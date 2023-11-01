@@ -17,7 +17,7 @@ paths:
       parameters:
         - name: code
           in: query
-          schema: &a45
+          schema: &a17
             $schema: https://json-schema.org/draft/2020-12/schema
             title: Code
             type: string
@@ -31,7 +31,7 @@ paths:
               - TRA-EQ-101
         - name: secteur
           in: query
-          schema: &a43
+          schema: &a15
             $schema: https://json-schema.org/draft/2020-12/schema
             title: Secteur d'application
             type: string
@@ -70,7 +70,7 @@ paths:
               - TRA
         - name: sousSecteur
           in: query
-          schema: &a44
+          schema: &a16
             $schema: https://json-schema.org/draft/2020-12/schema
             title: Sous-secteur d'application
             type: string
@@ -140,11 +140,10 @@ paths:
             application/json:
               schema:
                 type: array
-                items: &a29
-                  title: Fiche d'opération standardisée
+                items: &a19
                   type: object
                   properties:
-                    id:
+                    id: &a18
                       title: Fiche d'opération standardisée
                       type: string
                       oneOf:
@@ -247,43 +246,7 @@ paths:
                       title: Secteur d'application
                       type: object
                       properties:
-                        code:
-                          $schema: https://json-schema.org/draft/2020-12/schema
-                          title: Secteur d'application
-                          type: string
-                          oneOf:
-                            - &a15
-                              const: AGRI
-                              title: Agriculture
-                            - &a16
-                              const: BAR
-                              title: Bâtiment résidentiel
-                            - &a17
-                              const: BAT
-                              title: Bâtiment tertiaire
-                            - &a18
-                              const: IND
-                              title: Industrie
-                            - &a19
-                              const: RES
-                              title: Réseaux
-                            - &a20
-                              const: TRA
-                              title: Transport
-                          $defs:
-                            AGRI: *a15
-                            BAR: *a16
-                            BAT: *a17
-                            IND: *a18
-                            RES: *a19
-                            TRA: *a20
-                          examples:
-                            - AGRI
-                            - BAR
-                            - BAT
-                            - IND
-                            - RES
-                            - TRA
+                        code: *a15
                         nom:
                           title: Nom
                           type: string
@@ -294,71 +257,14 @@ paths:
                       title: Sous secteur d'application
                       type: object
                       properties:
-                        code:
-                          $schema: https://json-schema.org/draft/2020-12/schema
-                          title: Sous-secteur d'application
-                          type: string
-                          oneOf:
-                            - &a21
-                              const: BA
-                              title: Bâtiments
-                            - &a22
-                              const: CH
-                              title: Chaleur et Froid
-                            - &a23
-                              const: EC
-                              title: Eclairage
-                            - &a24
-                              const: EN
-                              title: Enveloppe
-                            - &a25
-                              const: EQ
-                              title: Equipement
-                            - &a26
-                              const: SE
-                              title: Services
-                            - &a27
-                              const: TH
-                              title: Thermique
-                            - &a28
-                              const: UT
-                              title: Utilités
-                          $defs:
-                            BA: *a21
-                            CH: *a22
-                            EC: *a23
-                            EN: *a24
-                            EQ: *a25
-                            SE: *a26
-                            TH: *a27
-                            UT: *a28
-                          examples:
-                            - BA
-                            - CH
-                            - EC
-                            - EN
-                            - EQ
-                            - SE
-                            - TH
-                            - UT
+                        code: *a16
                         nom:
                           title: Nom
                           type: string
                       required:
                         - code
                         - nom
-                    code:
-                      $schema: https://json-schema.org/draft/2020-12/schema
-                      title: Code
-                      type: string
-                      pattern: (AGRI|BAR|BAT|IND|RES|TRA)[-](BA|CH|EC|EN|EQ|SE|TH|UT)[-][0-9]*([-]SE)?
-                      examples:
-                        - AGRI-EQ-101
-                        - BAT-EN-101
-                        - BAR-EN-101
-                        - IND-BA-110
-                        - RES-CH-101
-                        - TRA-EQ-101
+                    code: *a17
                     version:
                       type: string
                       pattern: ^[0-9]+[.][0-9]+$
@@ -399,111 +305,13 @@ paths:
       parameters:
         - name: id
           in: path
-          schema: &a47
-            title: Fiche d'opération standardisée
-            type: string
-            oneOf:
-              - const: BAR-EN-101v39-4
-              - const: BAR-EN-101v54-5
-              - const: BAR-EN-102v39-2
-              - const: BAR-EN-103v39-5
-              - const: BAR-EN-104v14-1
-              - const: BAR-EN-104v54-2
-              - const: BAR-EN-105v39-3
-              - const: BAR-EN-106v33-4
-              - const: BAR-EN-107v20-3
-              - const: BAR-EN-108v37-2
-              - const: BAR-EN-108v54-3
-              - const: BAR-EN-109v24-1
-              - const: BAR-EN-110v35-1
-              - const: BAR-EQ-110v15-1
-              - const: BAR-EQ-115v28-1
-              - const: BAR-SE-104v19-1
-              - const: BAR-SE-105v28-1
-              - const: BAR-SE-106v32-1
-              - const: BAR-SE-107v37-1
-              - const: BAR-SE-108v48-1
-              - const: BAR-SE-109v54-1
-              - const: BAR-TH-101v17-1
-              - const: BAR-TH-102v17-1
-              - const: BAR-TH-104v41-3
-              - const: BAR-TH-106v23-2
-              - const: BAR-TH-107-SEv14-1
-              - const: BAR-TH-107v14-1
-              - const: BAR-TH-110v16-1
-              - const: BAR-TH-111v17-1
-              - const: BAR-TH-112v46-3
-              - const: BAR-TH-113v41-3
-              - const: BAR-TH-116v17-1
-              - const: BAR-TH-117v14-1
-              - const: BAR-TH-118v14-1
-              - const: BAR-TH-122v15-1
-              - const: BAR-TH-123v17-1
-              - const: BAR-TH-123v54-2
-              - const: BAR-TH-124v35-3
-              - const: BAR-TH-125v40-4
-              - const: BAR-TH-125v54-5
-              - const: BAR-TH-127v40-4
-              - const: BAR-TH-127v54-5
-              - const: BAR-TH-129v27-3
-              - const: BAR-TH-130v26-1
-              - const: BAR-TH-130v54-2
-              - const: BAR-TH-135v35-2
-              - const: BAR-TH-137v45-3
-              - const: BAR-TH-139v23-2
-              - const: BAR-TH-141v15-1
-              - const: BAR-TH-143v25-1
-              - const: BAR-TH-143v51-5
-              - const: BAR-TH-145v36-3
-              - const: BAR-TH-145v52-4
-              - const: BAR-TH-148v15-2
-              - const: BAR-TH-150v14-1
-              - const: BAR-TH-155v40-4
-              - const: BAR-TH-158v35-2
-              - const: BAR-TH-159v44-3
-              - const: BAR-TH-159v50-4
-              - const: BAR-TH-160v39-2
-              - const: BAR-TH-160v50-3
-              - const: BAR-TH-160v54-4
-              - const: BAR-TH-161v28-1
-              - const: BAR-TH-161v54-2
-              - const: BAR-TH-162v28-1
-              - const: BAR-TH-163v38-2
-              - const: BAR-TH-164v36-2
-              - const: BAR-TH-164v52-3
-              - const: BAR-TH-165v34-1
-              - const: BAR-TH-166v38-1
-              - const: BAR-TH-167v38-1
-              - const: BAR-TH-168v40-1
-              - const: BAR-TH-169v46-1
-              - const: BAR-TH-170v54-1
-              - const: BAR-TH-171v55-1
-              - const: BAR-TH-172v55-1
-            $defs:
-              agri:
-                type: string
-                pattern: (AGRI)[-](BA|CH|EC|EN|EQ|SE|TH|UT)[-][0-9]+([-]SE)?v[0-9]+[-][0-9]+
-              bar:
-                type: string
-                pattern: (BAR)[-](BA|CH|EC|EN|EQ|SE|TH|UT)[-][0-9]+([-]SE)?v[0-9]+[-][0-9]+
-              bat:
-                type: string
-                pattern: (BAT)[-](BA|CH|EC|EN|EQ|SE|TH|UT)[-][0-9]+([-]SE)?v[0-9]+[-][0-9]+
-              ind:
-                type: string
-                pattern: (IND)[-](BA|CH|EC|EN|EQ|SE|TH|UT)[-][0-9]+([-]SE)?v[0-9]+[-][0-9]+
-              res:
-                type: string
-                pattern: (RES)[-](BA|CH|EC|EN|EQ|SE|TH|UT)[-][0-9]+([-]SE)?v[0-9]+[-][0-9]+
-              tra:
-                type: string
-                pattern: (TRA)[-](BA|CH|EC|EN|EQ|SE|TH|UT)[-][0-9]+([-]SE)?v[0-9]+[-][0-9]+
+          schema: *a18
       responses:
         "200":
           description: Fiche d'opération standardisée retournée
           content:
             application/json:
-              schema: *a29
+              schema: *a19
         "404":
           description: Fiche d'opération standardisée non trouvée
   /bonifications:
@@ -515,38 +323,38 @@ paths:
       parameters:
         - name: code
           in: query
-          schema: &a46
+          schema: &a26
             $schema: https://json-schema.org/draft/2020-12/schema
             title: Code
             type: string
             oneOf:
-              - &a30
+              - &a20
                 const: ZNI
                 title: Zones non interconnectées au réseau métropolitain continental de
                   transport d'électricité
-              - &a31
+              - &a21
                 const: CPE
                 title: Contrat de performance énergétique
-              - &a32
+              - &a22
                 const: CFT
                 title: Coup de pouce Chauffage des bâtiments résidentiels collectifs et
                   tertiaires
-              - &a33
+              - &a23
                 const: CRC
                 title: Coup de pouce Rénovation performante de bâtiment résidentiel collectif
-              - &a34
+              - &a24
                 const: CRM
                 title: Coup de pouce Rénovation performante d'une maison individuelle
-              - &a35
+              - &a25
                 const: CDP
                 title: Coup de pouce Chauffage
             $defs:
-              ZNI: *a30
-              CPE: *a31
-              CFT: *a32
-              CRC: *a33
-              CRM: *a34
-              CDP: *a35
+              ZNI: *a20
+              CPE: *a21
+              CFT: *a22
+              CRC: *a23
+              CRM: *a24
+              CDP: *a25
               CDC:
                 const: CDC
                 title: Coup de pouce Covoiturage
@@ -570,13 +378,10 @@ paths:
             application/json:
               schema:
                 type: array
-                items: &a42
-                  title: Bonification
-                  description: Bonification applicable aux opérations standardisées d'économies
-                    d'énergie
+                items: &a33
                   type: object
                   properties:
-                    id:
+                    id: &a34
                       title: Bonification
                       type: string
                       oneOf:
@@ -606,38 +411,39 @@ paths:
                         ZNI:
                           type: string
                           pattern: ^ZNIv[0-9]{2}[-][0-9]+$
-                    code:
+                    code: *a26
+                    nature:
                       $schema: https://json-schema.org/draft/2020-12/schema
-                      title: Code
+                      title: Nature
                       type: string
                       oneOf:
-                        - &a36
+                        - &a27
                           const: ZNI
                           title: Zones non interconnectées au réseau métropolitain continental de
                             transport d'électricité
-                        - &a37
+                        - &a28
                           const: CPE
                           title: Contrat de performance énergétique
-                        - &a38
+                        - &a29
                           const: CFT
                           title: Coup de pouce Chauffage des bâtiments résidentiels collectifs et
                             tertiaires
-                        - &a39
+                        - &a30
                           const: CRC
                           title: Coup de pouce Rénovation performante de bâtiment résidentiel collectif
-                        - &a40
+                        - &a31
                           const: CRM
                           title: Coup de pouce Rénovation performante d'une maison individuelle
-                        - &a41
+                        - &a32
                           const: CDP
                           title: Coup de pouce Chauffage
                       $defs:
-                        ZNI: *a36
-                        CPE: *a37
-                        CFT: *a38
-                        CRC: *a39
-                        CRM: *a40
-                        CDP: *a41
+                        ZNI: *a27
+                        CPE: *a28
+                        CFT: *a29
+                        CRC: *a30
+                        CRM: *a31
+                        CDP: *a32
                         CDC:
                           const: CDC
                           title: Coup de pouce Covoiturage
@@ -671,6 +477,7 @@ paths:
                     - nom
                     - dateDebut
                     - dateFin
+                    - nature
   /bonifications/{id}:
     get:
       summary: Recherche une bonification par son identifiant unique
@@ -687,45 +494,16 @@ paths:
           description: Bonification retournée
           content:
             application/json:
-              schema: *a42
+              schema: *a33
         "404":
           description: Bonification non trouvée
 components:
   schemas:
-    fiche: *a29
-    bonification: *a42
-    codeSecteur: *a43
-    codeSousSecteur: *a44
-    codeFiche: *a45
-    codeBonification: *a46
-    referenceFiche: *a47
-    referenceBonification:
-      title: Bonification
-      type: string
-      oneOf:
-        - const: CDPv50-1
-        - const: CDPv52-1
-        - const: CFTv50-1
-        - const: CPEv40-1
-        - const: CRCv51-1
-        - const: CRMv51-1
-        - const: ZNIv35-1
-      $defs:
-        CDP:
-          type: string
-          pattern: ^CDPv[0-9]{2}[-][0-9]+$
-        CFT:
-          type: string
-          pattern: ^CFTv[0-9]{2}[-][0-9]+$
-        CPE:
-          type: string
-          pattern: ^CPEv[0-9]{2}[-][0-9]+$
-        CRC:
-          type: string
-          pattern: ^CRCv[0-9]{2}[-][0-9]+$
-        CRM:
-          type: string
-          pattern: ^CRMv[0-9]{2}[-][0-9]+$
-        ZNI:
-          type: string
-          pattern: ^ZNIv[0-9]{2}[-][0-9]+$
+    fiche: *a19
+    bonification: *a33
+    codeSecteur: *a15
+    codeSousSecteur: *a16
+    codeFiche: *a17
+    codeBonification: *a26
+    referenceFiche: *a18
+    referenceBonification: *a34

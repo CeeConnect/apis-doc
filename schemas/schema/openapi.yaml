@@ -1,0 +1,105 @@
+openapi: 3.1.0
+info:
+  title: Schémas
+  version: 1.0.0
+paths:
+  /schemas/{namespace}/{operationId}:
+    get:
+      summary: Recherche un schéma openAPI
+      operationId: getSchemasById
+      parameters:
+        - &a1
+          name: namespace
+          in: path
+          required: true
+          schema:
+            type: string
+            enum:
+              - archivage
+              - coherence
+              - controle
+              - depot
+              - instruction
+              - repertoire
+              - simulation
+        - &a2
+          name: operationId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+        "404": &a3
+          description: Ressource non trouvée
+    post:
+      summary: Valide un jeu de données sur la base d'un JSON Schéma correspondant à
+        l'ID de l'opération en paramètre
+      operationId: validateOperation
+      parameters:
+        - *a1
+        - *a2
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data: {}
+              required:
+                - data
+      responses:
+        "204":
+          description: Requête exécutée avec succès sans retourner de contenu
+        "404": *a3
+        "422":
+          description: Requête invalide
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  title:
+                    type: string
+                  status:
+                    type: integer
+                    const: 422
+                  detail:
+                    type: string
+                  errors:
+                    type: array
+                    items:
+                      title: Erreur
+                      type: object
+                      properties:
+                        keyword:
+                          type: string
+                        propertyPath:
+                          type: string
+                        message:
+                          type: string
+components:
+  parameters:
+    namespace: *a1
+    operationId: *a2
+  schemas:
+    error:
+      title: Erreur
+      type: object
+      properties:
+        path:
+          title: Path
+          type: string
+        message:
+          title: Message
+          type: string
+      required:
+        - path
+        - message

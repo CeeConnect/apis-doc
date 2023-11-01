@@ -1,0 +1,204 @@
+openapi: 3.1.0
+info:
+  title: Litige
+  version: 1.0.0
+tags:
+  - name: Litige
+paths:
+  /litiges:
+    get:
+      summary: Liste les litiges
+      operationId: getLitiges
+      tags:
+        - Litige
+      parameters:
+        - name: depot
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: operation
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: statut
+          in: query
+          schema: &a1
+            title: Statut du litige
+            type: string
+            oneOf:
+              - const: en_attente_correction
+                title: En attente de correction
+              - const: en_attente_verification
+                title: En attente de vérification
+              - const: resolu
+                title: Litige résolu
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: &a2
+                  title: Litige
+                  type: object
+                  properties:
+                    uuid:
+                      title: Identifiant
+                      type: string
+                      format: uuid
+                    reference:
+                      title: Référence externe
+                      type: string
+                      format: uuid
+                    dateCreation:
+                      title: Date de création
+                      type: string
+                      format: date
+                    description:
+                      title: Description du litige
+                      type: string
+                    statut: *a1
+                  required:
+                    - uuid
+                    - reference
+                    - dateCreation
+                    - description
+                    - statut
+    post:
+      summary: Ajoute un nouveau litige
+      operationId: createLitige
+      tags:
+        - Litige
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionnalProperties: false
+              properties:
+                reference:
+                  title: Référence externe
+                  type: string
+                  format: uuid
+                description:
+                  title: Description du litige
+                  type: string
+              required:
+                - description
+                - reference
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: *a2
+        "422": &a3
+          description: Requête invalide
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  title:
+                    type: string
+                  status:
+                    type: integer
+                    const: 422
+                  detail:
+                    type: string
+                  errors:
+                    type: array
+                    items:
+                      title: Erreur
+                      type: object
+                      properties:
+                        keyword:
+                          type: string
+                        propertyPath:
+                          type: string
+                        message:
+                          type: string
+  /litiges/{uuid}:
+    parameters:
+      - &a5
+        name: uuid
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    patch:
+      summary: Modification d'un litige
+      operationId: updateLitige
+      tags:
+        - Litige
+      requestBody:
+        content:
+          application/merge-patch+json:
+            schema:
+              type: object
+              additionnalProperties: false
+              properties:
+                description:
+                  title: Description du litige
+                  type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: *a2
+        "404": &a4
+          description: Ressource non trouvée
+        "422": *a3
+    delete:
+      summary: Supprime un litige
+      operationId: removeLitige
+      tags:
+        - Litige
+      responses:
+        "204":
+          description: Requête exécutée avec succès sans retourner de contenu
+        "404": *a4
+  /litiges/{uuid}/{action}:
+    parameters:
+      - *a5
+      - name: action
+        in: path
+        required: true
+        schema:
+          type: object
+          properties:
+            action:
+              type: string
+              enum:
+                - correction
+                - invalide
+                - valide
+            required:
+              - action
+    post:
+      summary: Gestion du cycle de vie d'un litige
+      operationId: manageLitige
+      tags:
+        - Litige
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: *a2
+        "403":
+          description: Requête interdite
+        "404": *a4
+components:
+  parameters:
+    litige: *a5
+  schemas:
+    statut: *a1
+    litige: *a2

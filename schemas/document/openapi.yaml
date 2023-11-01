@@ -1,0 +1,327 @@
+openapi: 3.1.0
+info:
+  title: API Documents
+  description: API de gestion des documents relatifs aux opérations d'économies d'énergie
+  version: 1.0.0
+tags:
+  - name: Document
+paths:
+  /documents:
+    get:
+      summary: Liste les documents
+      operationId: getDocuments
+      tags:
+        - Document
+      parameters:
+        - name: reference
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: statut
+          in: query
+          schema: &a1
+            title: Statut du document
+            type: string
+            oneOf:
+              - const: en_attente_validation
+                title: En attente de validation
+              - const: en_attente_signature
+                title: En attente de signature
+              - const: valide
+                title: Document invalide
+              - const: invalide
+                title: Document valide
+              - const: archive
+                title: Document archivé
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: &a2
+                  title: Document
+                  type: object
+                  properties:
+                    uuid:
+                      title: Identifiant
+                      type: string
+                      format: uuid
+                    reference:
+                      title: Référence interne
+                      type: string
+                      format: uuid
+                    signature:
+                      title: Identifiant de la procédure de signature électronique
+                      oneOf:
+                        - type: string
+                          format: uuid
+                        - type: "null"
+                    archive:
+                      title: Identifiant de l'archive
+                      oneOf:
+                        - type: string
+                          format: uuid
+                        - type: "null"
+                    dateCreation:
+                      title: Date de création
+                      type: string
+                      format: date
+                    dateModification:
+                      title: Date de modification
+                      type: string
+                      format: date
+                    code:
+                      title: Code du document
+                      type: string
+                    nom:
+                      title: Nom du document
+                      type: string
+                    statut: *a1
+                  required:
+                    - uuid
+                    - reference
+                    - signature
+                    - archive
+                    - dateCreation
+                    - dateModification
+                    - code
+                    - nom
+                    - statut
+    post:
+      summary: Ajout d'un nouveau document
+      operationId: createDocument
+      tags:
+        - Document
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                reference:
+                  title: Référence interne
+                  type: string
+                  format: uuid
+                document:
+                  type: string
+                  format: binary
+                code:
+                  title: Code du document
+                  type: string
+                nom:
+                  title: Nom du document
+                  type: string
+              required:
+                - reference
+                - document
+                - nom
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: *a2
+        "422": &a3
+          description: Requête invalide
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  title:
+                    type: string
+                  status:
+                    type: integer
+                    const: 422
+                  detail:
+                    type: string
+                  errors:
+                    type: array
+                    items:
+                      title: Erreur
+                      type: object
+                      properties:
+                        keyword:
+                          type: string
+                        propertyPath:
+                          type: string
+                        message:
+                          type: string
+  /documents/generation:
+    post:
+      summary: Génère une pièce justificative pour automatisation
+      operationId: genereDocument
+      tags:
+        - Document
+      requestBody:
+        content:
+          application/json:
+            schema:
+              unevaluatedProperties: false
+              type: object
+              properties:
+                reference:
+                  title: Référence interne
+                  type: string
+                  format: uuid
+                automation:
+                  title: Initialise une procédure de gestion automatique du document généré
+                  type: boolean
+                  default: false
+                code:
+                  title: Code du document
+                  type: string
+                  enum:
+                    - attestation_honneur
+                    - cadre_contribution
+                data:
+                  description: Données d'entrée conformes aux Schémas JSON
+                  type: object
+              required:
+                - reference
+                - automation
+                - code
+                - data
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - *a2
+                  - type: string
+                    format: binary
+        "422": *a3
+  /documents/{uuid}:
+    parameters:
+      - &a6
+        name: uuid
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      summary: Récupère un document
+      operationId: getDocument
+      tags:
+        - Document
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: *a2
+        "404": &a4
+          description: Ressource non trouvée
+    post:
+      summary: Remplace un document
+      operationId: replaceDocument
+      tags:
+        - Document
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: string
+              format: binary
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: *a2
+        "403": &a5
+          description: Requête interdite
+        "404": *a4
+        "422": *a3
+    patch:
+      summary: Modifie un document
+      operationId: updateDocument
+      tags:
+        - Document
+      requestBody:
+        content:
+          application/merge-patch+json:
+            schema:
+              type: object
+              properties:
+                code:
+                  title: Code du document
+                  type: string
+                nom:
+                  title: Nom du document
+                  type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: *a2
+        "403": *a5
+        "404": *a4
+        "422": *a3
+    delete:
+      summary: Supprime un document
+      operationId: removeDocument
+      tags:
+        - Document
+      responses:
+        "204":
+          description: Requête exécutée avec succès sans retourner de contenu
+        "403": *a5
+        "404": *a4
+  /documents/{uuid}/telechargement:
+    parameters:
+      - *a6
+    get:
+      summary: Télécharge un document
+      operationId: downloadDocument
+      tags:
+        - Document
+      responses:
+        "200":
+          description: OK
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+        "404": *a4
+  /documents/{uuid}/{action}:
+    parameters:
+      - *a6
+      - name: action
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+            - valide
+            - invalide
+            - archive
+    post:
+      summary: Gestion du cycle de vie d'un document
+      operationId: manageDocument
+      tags:
+        - Document
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: *a2
+        "403": *a5
+        "404": *a4
+components:
+  parameters:
+    document: *a6
+  schemas:
+    statut: *a1
+    document: *a2
